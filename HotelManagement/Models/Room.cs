@@ -1,0 +1,22 @@
+﻿namespace HotelManagement.Models
+{
+    public class Room : BaseModel 
+    {
+        public int RoomNumber { get; set; }
+        public  string? Name { get; set; }
+        public string? ImageUrl { get; set; }
+        public int Capacity { get; set; }
+        public RoomType Type { get; set; }
+        public decimal PricePerNight { get; set; }
+        public bool IsAvailable { get; set; }
+    }
+    public enum RoomType
+    {
+        Single,
+        Double,
+        Suite,
+        Deluxe
+    }
+
+}
+
