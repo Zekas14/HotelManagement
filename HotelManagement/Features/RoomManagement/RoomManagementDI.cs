@@ -7,7 +7,9 @@ namespace HotelManagement.Features.RoomManagement
     {
         public static IServiceCollection AddRoomManagementFeatures(this IServiceCollection services)
         {
-            services.AddScoped<IValidator<AddRoomDto>, AddRoomCommandValidator>();
+            services.AddScoped<IValidator<AddRoomCommand>, AddRoomCommandValidator>();
+            services.AddScoped<IValidator<UpdateRoomCommand>, UpdateRoomCommandValidator>();
+            services.AddScoped<IValidator<DeleteRoomCommand>, DeleteRoomCommandValidator>();
 
             return services;
         }

@@ -2,6 +2,7 @@ using FastEndpoints;
 using FluentValidation;
 using HotelManagement.Data;
 using HotelManagement.Data.Repositories;
+using HotelManagement.Features.RoomManagement;
 using HotelManagement.Features.RoomManagement.Rooms;
 using HotelManagement.Middlewares;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<IValidator<AddRoomDto>, AddRoomCommandValidator>();
+builder.Services.AddRoomManagementFeatures();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 var app = builder.Build();

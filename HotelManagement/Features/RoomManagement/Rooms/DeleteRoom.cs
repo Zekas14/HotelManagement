@@ -1,4 +1,5 @@
 ﻿using FastEndpoints;
+using FluentValidation;
 using HotelManagement.Common;
 using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
@@ -12,8 +13,15 @@ using Microsoft.Extensions.Caching.Memory;
 namespace HotelManagement.Features.RoomManagement.Rooms
 {
     #region Command    
-    public record DeleteRoomCommand([FromRoute] int RoomID): IRequest<RequestResult<bool>>;
+    public record DeleteRoomCommand( int RoomID): IRequest<RequestResult<bool>>;
 
+    public class DeleteRoomCommandValidator: AbstractValidator<DeleteRoomCommand>
+    {
+        public DeleteRoomCommandValidator()
+        {
+            RuleFor(x=>x.RoomID).NotEmpty();
+        }
+    }
     #endregion
 
     #region Command Handler
@@ -38,10 +46,10 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Endpoint 
-    public class DeleteRoomEndPoint(IMediator mediator) : DeleteModule<DeleteRoomCommand>(mediator)
+    public class DeleteRoomEndPoint(IMediator mediator , IValidator<DeleteRoomCommand> validator) : DeleteEndpoint<DeleteRoomCommand>(mediator, validator)
     {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/delete";
-        override public async Task HandleAsync(DeleteRoomCommand req, CancellationToken ct)
+        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/delete/"+"{id:int}";
+        override public async Task HandleAsync([FromRoute] DeleteRoomCommand req, CancellationToken ct)
         {
             var result =  await mediator.Send(req, ct);
             IResult response = result.IsSuccess

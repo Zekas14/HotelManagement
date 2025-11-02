@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HotelManagement.Common.Modules
 {
-    public abstract class GetModule<TResponseType>(IMediator mediator) : EndpointWithoutRequest<EndpointResult<TResponseType>>
+    public abstract class GetEndpoint<TResponseType>(IMediator mediator) : EndpointWithoutRequest<EndpointResult<TResponseType>>
     {
         protected readonly IMediator _mediator = mediator;
         protected abstract string GetRoute();

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HotelManagement.Common;
 using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
@@ -29,7 +30,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         public decimal PricePerNight { get; set; }
         public bool IsAvailable { get; set; }
     }
-    public class AddRoomCommandValidator : AbstractValidator<AddRoomDto>
+    public class AddRoomCommandValidator : AbstractValidator<AddRoomCommand>
     {
         private readonly ApplicationDbContext context;
 
@@ -87,11 +88,11 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Endpoint 
-    public class AddRoomEndpoint(IMediator mediator , IValidator<AddRoomDto> validator) : PostEndpoint<AddRoomDto, bool>(validator , mediator)
+    public class AddRoomEndpoint(IMediator mediator , IValidator<AddRoomCommand> validator) : PostEndpoint<AddRoomCommand, bool>(validator , mediator)
     {
-        protected override string GetRoute() => "api/rooms/add";
+        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/add";
 
-        public override async Task HandleAsync(AddRoomDto req, CancellationToken ct)
+        public override async Task HandleAsync(AddRoomCommand req, CancellationToken ct)
         {
             var validationResult = await Validate(req);
             if (!validationResult.IsSuccess)
@@ -99,8 +100,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                 await Send.ResultAsync(validationResult);
                 return;
             }
-            var command = new AddRoomCommand(req.RoomNumber, req.Name, req.ImageUrl, req.Capacity, req.Type, req.PricePerNight, req.IsAvailable);
-            var result = await mediator.Send(command, ct);
+            var result = await mediator.Send(req, ct);
             IResult response = result.IsSuccess
                 ? new SuccessEndpointResult<bool>(result.Data, result.Message)
                 : FailureEndpointResult<bool>.BadRequest(result.Message);

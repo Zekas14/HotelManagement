@@ -1,10 +1,12 @@
-﻿using HotelManagement.Common.Modules;
+﻿using HotelManagement.Common;
+using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
 using HotelManagement.Data.Repositories;
 using HotelManagement.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
+using System.Reflection.Metadata;
 
 namespace HotelManagement.Features.RoomManagement.Rooms
 {
@@ -46,7 +48,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                     RoomNumber = e.RoomNumber,
                     Name = e.Name,
                     Type = e.Type.ToString(),
-                    CreatedDate = e.CreatedAt.ToShortDateString(),
+                    CreatedDate = e.CreatedAt.ToString(Constants.DateTimeFormat),
                 });
             if (!data.Any())
             {
@@ -59,7 +61,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Endpoint 
-    public class GetRoomsEndPoint(IMediator mediator) : GetModule<GetRoomsQuery>(mediator)
+    public class GetRoomsEndPoint(IMediator mediator) : GetEndpoint<GetRoomsQuery>(mediator)
     {
 
         protected override string GetRoute() => "/apis/rooms";
