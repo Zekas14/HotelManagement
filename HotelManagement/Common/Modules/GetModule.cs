@@ -1,12 +1,17 @@
-﻿using MediatR;
+﻿using FastEndpoints;
+using HotelManagement.Common.Responses.EndpointResults;
+using MediatR;
 
 namespace HotelManagement.Common.Modules
 {
-    public abstract class GetModule<TRequest> : BaseModule<TRequest>
+    public abstract class GetModule<TResponseType>(IMediator mediator) : EndpointWithoutRequest<EndpointResult<TResponseType>>
     {
-        public override void AddRoutes(IEndpointRouteBuilder app)
+        protected readonly IMediator _mediator = mediator;
+        protected abstract string GetRoute();
+        override public void Configure()
         {
-            app.MapGet(Route, Handler);
+            Get(GetRoute());
+            AllowAnonymous();
         }
     }
 }

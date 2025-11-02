@@ -7,10 +7,10 @@ using HotelManagement.Data.Repositories;
 using HotelManagement.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
-using System.ComponentModel.DataAnnotations;
 
 namespace HotelManagement.Features.RoomManagement.Rooms
 {
+
     #region Command 
     public record AddRoomCommand(int RoomNumber, string Name ,string ImageUrl,int Capacity, string Type, decimal PricePerNight, bool IsAvailable) : IRequest<RequestResult<bool>>;
     #endregion
@@ -25,7 +25,6 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         public string Name { get; set; }
         public string ImageUrl { get; set; }
         public int Capacity { get; set; }
-        [AllowedValues([ "Single", "Double", "Suite", "Deluxe" ])]
         public string Type { get; set; }
         public decimal PricePerNight { get; set; }
         public bool IsAvailable { get; set; }
@@ -67,6 +66,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
 
         public async Task<RequestResult<bool>> Handle(AddRoomCommand request, CancellationToken cancellationToken)
         {
+
             
             repository.Add(new Room
             {
@@ -87,20 +87,26 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Endpoint 
-    public class AddRoomEndpoint : PostModule<AddRoomDto>
+    public class AddRoomEndpoint(IMediator mediator , IValidator<AddRoomDto> validator) : PostEndpoint<AddRoomDto, bool>(validator , mediator)
     {
-        protected override string Route => "api/rooms/add";
+        protected override string GetRoute() => "api/rooms/add";
 
-        protected override Func<AddRoomDto, IMediator, Task<IResult>> Handler =>
-            async (AddRoomDto dto, IMediator mediator) =>
+        public override async Task HandleAsync(AddRoomDto req, CancellationToken ct)
+        {
+            var validationResult = await Validate(req);
+            if (!validationResult.IsSuccess)
             {
-                var command = new AddRoomCommand(dto.RoomNumber,dto.Name,dto.ImageUrl, dto.Capacity, dto.Type, dto.PricePerNight, dto.IsAvailable);
-                var result = await mediator.Send(command);
-
-                return result.IsSuccess
-                    ? new SuccessEndpointResult<bool>(result.Data, result.Message)
-                    : FailureEndpointResult<bool>.BadRequest(result.Message);
-            };
+                await Send.ResultAsync(validationResult);
+                return;
+            }
+            var command = new AddRoomCommand(req.RoomNumber, req.Name, req.ImageUrl, req.Capacity, req.Type, req.PricePerNight, req.IsAvailable);
+            var result = await mediator.Send(command, ct);
+            IResult response = result.IsSuccess
+                ? new SuccessEndpointResult<bool>(result.Data, result.Message)
+                : FailureEndpointResult<bool>.BadRequest(result.Message);
+            await Send.ResultAsync(response);
+        }
+    
     }
     #endregion
 }

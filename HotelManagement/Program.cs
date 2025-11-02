@@ -1,4 +1,4 @@
-using Carter;
+using FastEndpoints;
 using FluentValidation;
 using HotelManagement.Data;
 using HotelManagement.Data.Repositories;
@@ -7,11 +7,7 @@ using HotelManagement.Middlewares;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
-
-builder.Services.AddCarter(
- );
-
-
+builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();   
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -21,7 +17,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );
 builder.Services.AddMemoryCache();
-
 builder.Services.AddScoped<IValidator<AddRoomDto>, AddRoomCommandValidator>();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
@@ -35,7 +30,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseMiddleware<GlobalErrorHandlerMiddleware>();
-app.MapCarter();
-
+app.UseFastEndpoints();
 app.Run();
 

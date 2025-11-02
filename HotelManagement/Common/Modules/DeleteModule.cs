@@ -2,11 +2,13 @@
 
 namespace HotelManagement.Common.Modules
 {
-    public abstract class DeleteModule<TRequest>: BaseModule<TRequest>
+    public abstract class DeleteModule<TRequest>(IMediator mediator) : BaseEndpoint<TRequest, bool>(mediator)
     {
-        public override void AddRoutes(IEndpointRouteBuilder app)
+        public override void Configure()
         {
-            app.MapDelete(Route, Handler);
+            Delete(GetRoute());
+            AllowAnonymous();
         }
     }
 }
+

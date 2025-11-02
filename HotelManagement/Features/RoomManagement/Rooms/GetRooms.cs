@@ -59,19 +59,21 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Endpoint 
-    public class GetRoomsEndPoint : GetModule<GetRoomsQuery>
+    public class GetRoomsEndPoint(IMediator mediator) : GetModule<GetRoomsQuery>(mediator)
     {
 
-        protected override string Route => "/apis/rooms";
+        protected override string GetRoute() => "/apis/rooms";
 
 
-        protected override Delegate Handler => new Func<IMediator, Task<IResult>>(async (mediator) =>
+        public override async Task HandleAsync(CancellationToken ct)
         {
-            var result = await mediator.Send(new GetRoomsQuery());
-            return result.IsSuccess
+            var query = new GetRoomsQuery();
+            var result = await mediator.Send(query, ct);
+            IResult response = result.IsSuccess
                 ? new SuccessEndpointResult<IReadOnlyList<GetRoomsResponseDto>>(result.Data, result.Message)
-                : FailureEndpointResult<IReadOnlyList<GetRoomsResponseDto>>.NotFound("No Rooms Are Founded");
-        });
+                : FailureEndpointResult<IReadOnlyList<GetRoomsResponseDto>>.BadRequest(result.Message);
+            await Send.ResultAsync(response);
+        }
 
     }
     #endregion
