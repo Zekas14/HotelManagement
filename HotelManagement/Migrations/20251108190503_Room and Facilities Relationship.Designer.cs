@@ -3,6 +3,7 @@ using System;
 using HotelManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251108190503_Room and Facilities Relationship")]
+    partial class RoomandFacilitiesRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,8 +101,6 @@ namespace HotelManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FacilityId");
-
                     b.HasIndex("RoomId");
 
                     b.ToTable("RoomFacilities");
@@ -107,26 +108,13 @@ namespace HotelManagement.Migrations
 
             modelBuilder.Entity("HotelManagement.Models.RoomFacility", b =>
                 {
-                    b.HasOne("HotelManagement.Models.Facility", "Facility")
-                        .WithMany()
-                        .HasForeignKey("FacilityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("HotelManagement.Models.Room", "Room")
-                        .WithMany("Facilities")
+                        .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Facility");
-
                     b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("HotelManagement.Models.Room", b =>
-                {
-                    b.Navigation("Facilities");
                 });
 #pragma warning restore 612, 618
         }
