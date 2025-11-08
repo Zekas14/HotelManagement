@@ -12,8 +12,8 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();   
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("PostConnection"),
         sql => sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );

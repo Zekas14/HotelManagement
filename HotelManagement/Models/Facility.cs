@@ -1,9 +1,9 @@
 ﻿namespace HotelManagement.Models
 {
-    public class Facility
+    public class Facility : BaseModel
         {
-            public int Id { get; set; }
             public string Name { get; set; }
+        
         }
     
 }

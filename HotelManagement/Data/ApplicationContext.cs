@@ -11,32 +11,11 @@ namespace HotelManagement.Data
         {
         }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomFacility> RoomFacilities { get; set; }
         public DbSet<Facility> Facilities { get; set; }
-    }
-
-    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
-    {
-        private readonly IConfiguration configuration ;
-        public ApplicationDbContextFactory()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            this.configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+            modelBuilder.Entity<Room>().Property(r=>r.PricePerNight).HasColumnType("numeric(18,2)");
         }
-        public ApplicationDbContextFactory(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
-        public ApplicationDbContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseSqlServer(
-             configuration.GetConnectionString("DefaultConnection"),
-             options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
-             ).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            return new ApplicationDbContext(optionsBuilder.Options);
-        }
-
     }
 }

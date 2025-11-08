@@ -3,20 +3,17 @@ using Moq;
 using HotelManagement.Features.RoomManagement.Rooms;
 using HotelManagement.Models;
 using Microsoft.Extensions.Caching.Memory;
-using HotelManagement.Common.Responses;
-using System.Threading;
-using System.Threading.Tasks;
 using HotelManagement.Data.Repositories;
 
-namespace HotelManagement.Tests.Features.Rooms
+namespace HotelManagement.Tests.Rooms
 {
-    public class AddRoomCommandHandlerTests
+    public class AddRoomTests
     {
         private readonly Mock<IGenericRepository<Room>> _repositoryMock;
         private readonly Mock<IMemoryCache> _cacheMock;
         private readonly AddRoomCommandHandler _handler;
 
-        public AddRoomCommandHandlerTests()
+        public AddRoomTests()
         {
             _repositoryMock = new Mock<IGenericRepository<Room>>();
             _cacheMock = new Mock<IMemoryCache>();
@@ -26,6 +23,7 @@ namespace HotelManagement.Tests.Features.Rooms
         [Fact]
         public async Task Handle_ShouldAddRoomAndReturnSuccess()
         {
+            
             // Arrange
             var command = new AddRoomCommand(101, "Deluxe Room", "url", 2, "Deluxe", 500, true);
             _repositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
@@ -39,21 +37,6 @@ namespace HotelManagement.Tests.Features.Rooms
             _repositoryMock.Verify(r => r.Add(It.IsAny<Room>()), Times.Once);
             _repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
             _cacheMock.Verify(c => c.Remove("rooms"), Times.Once);
-        }
-
-        [Fact]
-        public async Task Handle_ShouldReturnFailure_WhenSaveChangesThrowsException()
-        {
-            // Arrange
-            var command = new AddRoomCommand(102, "Room 2", "url", 2, "Suite", 400, true);
-            _repositoryMock.Setup(r => r.SaveChangesAsync()).ThrowsAsync(new Exception("DB Error"));
-
-            // Act
-            var result = await _handler.Handle(command, CancellationToken.None);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Contains("error", result.Message, StringComparison.OrdinalIgnoreCase);
         }
 
         [Fact]

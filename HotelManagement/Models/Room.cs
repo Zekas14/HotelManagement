@@ -9,6 +9,7 @@
         public RoomType Type { get; set; }
         public decimal PricePerNight { get; set; }
         public bool IsAvailable { get; set; }
+        public ICollection<RoomFacility>? Facilities { get; set; }
     }
     public enum RoomType
     {
