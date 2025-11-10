@@ -23,6 +23,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         public string CreatedDate { get; set; }
         public int Capacity { get; set; }
         public string Type { get; set; }
+        public IEnumerable<string>? Facilities { get; set; }
         public bool IsAvailable { get; set; }
     }
     #endregion
@@ -47,6 +48,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                     IsAvailable = e.IsAvailable,
                     RoomNumber = e.RoomNumber,
                     Name = e.Name,
+                    Facilities = e.Facilities!.Select(rf => rf.Facility!.Name),
                     Type = e.Type.ToString(),
                     CreatedDate = e.CreatedAt.ToString(Constants.DateTimeFormat),
                 });

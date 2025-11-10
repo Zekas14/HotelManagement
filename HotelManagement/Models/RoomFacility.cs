@@ -2,10 +2,8 @@
 
 namespace HotelManagement.Models
 {
-    public class RoomFacility
+    public class RoomFacility:BaseModel
     {
-        public int Id { get; set; }
-        [ForeignKey("Room")]
         public int RoomId { get; set; }
         public Room Room { get; set; }
 

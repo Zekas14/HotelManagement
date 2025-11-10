@@ -5,6 +5,7 @@ using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
 using HotelManagement.Data;
 using HotelManagement.Data.Repositories;
+using HotelManagement.Features.Common.Queries;
 using HotelManagement.Models;
 using MediatR;
 
@@ -44,20 +45,18 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Command Handler
-    public class UpdateRoomCommandHandler(IGenericRepository<Room> repository) : IRequestHandler<UpdateRoomCommand, RequestResult<bool>>
+    public class UpdateRoomCommandHandler(IGenericRepository<Room> repository, IMediator mediator) : IRequestHandler<UpdateRoomCommand, RequestResult<bool>>
     {
         private readonly IGenericRepository<Room> repository = repository;
+        private readonly IMediator mediator = mediator;
+
         public async Task<RequestResult<bool>> Handle(UpdateRoomCommand request, CancellationToken cancellationToken)
         {
-            var room = repository.GetById(request.RoomID);
-            if (room == null)
-            {
-                return RequestResult<bool>.Failure("Room not found.");
-            }
+          var isRoomExistsResult = await mediator.Send(new IsEntityExistsQuery<Room>(request.RoomID),cancellationToken);
             string[] values =
                 [nameof(Room.RoomNumber), nameof(Room.Name), nameof(Room.Capacity), nameof(Room.Type), nameof(Room.PricePerNight), nameof(Room.IsAvailable)];
 
-            repository.SaveInclude(room,values);
+            repository.SaveInclude(isRoomExistsResult.Data,values);
             await repository.SaveChangesAsync();
             return RequestResult<bool>.Success(true, "Room Updated Sucessfully");
         }

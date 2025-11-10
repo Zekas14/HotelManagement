@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using HotelManagement.Features.RoomManagement.Rooms;
 using HotelManagement.Features.RoomManagement.Facilities;
+using HotelManagement.Features.RoomManagement.RoomFacilities;
 
 namespace HotelManagement.Features.RoomManagement
 {
@@ -12,9 +13,11 @@ namespace HotelManagement.Features.RoomManagement
             services.AddScoped<IValidator<UpdateRoomCommand>, UpdateRoomCommandValidator>();
             services.AddScoped<IValidator<DeleteRoomCommand>, DeleteRoomCommandValidator>();
 
-            // Facilities
+           
             services.AddScoped<IValidator<AddFacillityCommand>, AddFacillityCommandValidator>();
             services.AddScoped<IValidator<UpdateFacilityCommand>, UpdateFacilityCommandValidator>();
+            services.AddScoped<IValidator<DeleteFacilityCommand>, DeleteFacilityCommandValidator>();
+            services.AddScoped<IValidator<AddRoomFacilityCommand>, AddRoomFacilityCommandValidator>();
 
             return services;
         }

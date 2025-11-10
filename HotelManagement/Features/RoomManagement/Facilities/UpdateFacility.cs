@@ -7,6 +7,7 @@ using HotelManagement.Data.Repositories;
 using HotelManagement.Models;
 using MediatR;
 using HotelManagement.Data;
+using HotelManagement.Features.Common.Queries;
 
 namespace HotelManagement.Features.RoomManagement.Facilities
 {
@@ -38,20 +39,19 @@ namespace HotelManagement.Features.RoomManagement.Facilities
     #endregion
 
     #region Handler
-    public class UpdateFacilityCommandHandler(IGenericRepository<Facility> repository) : IRequestHandler<UpdateFacilityCommand, RequestResult<bool>>
+    public class UpdateFacilityCommandHandler(IGenericRepository<Facility> repository, IMediator mediator) : IRequestHandler<UpdateFacilityCommand, RequestResult<bool>>
     {
         private readonly IGenericRepository<Facility> _repository = repository;
+        private readonly IMediator mediator = mediator;
 
         public async Task<RequestResult<bool>> Handle(UpdateFacilityCommand request, CancellationToken cancellationToken)
         {
-            var facility = _repository.GetById(request.Id);
-            if (facility == null)
+           var isFacilityExists=  await mediator.Send(new IsEntityExistsQuery<Facility>(request.Id), cancellationToken);
+            if (!isFacilityExists.IsSuccess)
             {
-                return RequestResult<bool>.Failure("Facility not found.");
+                return RequestResult<bool>.Failure(isFacilityExists.Message);
             }
-
-            facility.Name = request.Name;
-            _repository.SaveInclude(facility, nameof(Facility.Name));
+            _repository.SaveInclude(isFacilityExists.Data, nameof(Facility.Name));
             await _repository.SaveChangesAsync();
             return RequestResult<bool>.Success(true, "Facility updated successfully");
         }

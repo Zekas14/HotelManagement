@@ -45,6 +45,7 @@ namespace HotelManagement.Features.RoomManagement.Facilities
                 Name = request.Name
             };
              repository.Add(facility);
+            repository.SaveChanges();
           return Task.FromResult( RequestResult<bool>.Success(true,"Facility Added Successfully"));
         }
     }

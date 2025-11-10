@@ -21,7 +21,7 @@ namespace HotelManagement.Middlewares
             catch (Exception ex)
             {
                 
-                var response = FailureEndpointResult<bool>.BadRequest(message: $"{ex.Message}");
+                var response = FailureEndpointResult<bool>.BadRequest(message: $"{ex.InnerException}");
                 await context.Response.WriteAsJsonAsync(response);
             }
 

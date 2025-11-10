@@ -5,6 +5,7 @@ using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
 using HotelManagement.Data.Repositories;
+using HotelManagement.Features.Common.Queries;
 using HotelManagement.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,19 +26,20 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Command Handler
-    public class DeleteRoomCommandHandler(IGenericRepository<Room> repository , IMemoryCache cache) : IRequestHandler<DeleteRoomCommand, RequestResult<bool>>
+    public class DeleteRoomCommandHandler(IGenericRepository<Room> repository, IMediator mediator, IMemoryCache cache) : IRequestHandler<DeleteRoomCommand, RequestResult<bool>>
     {
         private readonly IGenericRepository<Room> repository = repository;
+        private readonly IMediator mediator = mediator;
         private readonly IMemoryCache cache = cache;
 
         public async Task<RequestResult<bool>> Handle(DeleteRoomCommand request, CancellationToken cancellationToken)
         {
-            var room =  repository.GetById(request.RoomID);
-            if (room == null)
+            var isRoomExistsResult = await mediator.Send(new IsEntityExistsQuery<Room>(request.RoomID),cancellationToken);
+            if (!isRoomExistsResult.IsSuccess)
             {
-                return RequestResult<bool>.Failure("Room not found.");
+                return RequestResult<bool>.Failure(isRoomExistsResult.Message);
             }
-            repository.Delete(room);
+            repository.Delete(request.RoomID);
             await repository.SaveChangesAsync();
             cache.Remove("rooms");
             return RequestResult<bool>.Success(true,"Room Deleted Successfully");

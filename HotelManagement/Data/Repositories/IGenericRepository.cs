@@ -15,7 +15,8 @@ namespace HotelManagement.Data.Repositories
         void SaveInclude(Entity entity, params string[] properties);
 
         void Update(Entity entity);
-        void Delete(Entity entity);
+        public void Delete(int id);
+
         Entity GetById(int id);
         void SaveChanges();
         Task SaveChangesAsync();
@@ -37,8 +38,9 @@ namespace HotelManagement.Data.Repositories
             _dbSet.AddRange(entities);
         }
 
-        public void Delete(Entity entity)
+        public void Delete(int id)
         {
+            var entity = GetById(id);
             entity.IsDeleted = true;
             SaveInclude(entity, nameof(BaseModel.IsDeleted));
         }

@@ -1,33 +1,42 @@
+using FluentValidation;
 using HotelManagement.Common;
 using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
 using HotelManagement.Data.Repositories;
+using HotelManagement.Features.Common.Queries;
+using HotelManagement.Features.RoomManagement.Rooms;
 using HotelManagement.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FluentValidation;
 
 namespace HotelManagement.Features.RoomManagement.Facilities
 {
     #region Command
     public record DeleteFacilityCommand(int Id) : IRequest<RequestResult<bool>>;
+    public class DeleteFacilityCommandValidator : AbstractValidator<DeleteFacilityCommand>
+    {
+        public DeleteFacilityCommandValidator()
+        {
+            RuleFor(x => x.Id).NotEmpty();
+        }
+    }
     #endregion
 
     #region Handler
-    public class DeleteFacilityCommandHandler(IGenericRepository<Facility> repository) : IRequestHandler<DeleteFacilityCommand, RequestResult<bool>>
+    public class DeleteFacilityCommandHandler(IGenericRepository<Facility> repository , IMediator mediator) : IRequestHandler<DeleteFacilityCommand, RequestResult<bool>>
     {
         private readonly IGenericRepository<Facility> _repository = repository;
+        private readonly IMediator _mediator = mediator;
 
         public async Task<RequestResult<bool>> Handle(DeleteFacilityCommand request, CancellationToken cancellationToken)
         {
-            var facility = _repository.GetById(request.Id);
-            if (facility == null)
+            var isFacilityExistsResult = await _mediator.Send(new IsEntityExistsQuery<Facility>(request.Id), cancellationToken);
+            if (!isFacilityExistsResult.IsSuccess)
             {
                 return RequestResult<bool>.Failure("Facility not found.");
             }
-
-            _repository.Delete(facility);
+            _repository.Delete(request.Id);
             await _repository.SaveChangesAsync();
             return RequestResult<bool>.Success(true, "Facility deleted successfully");
         }
