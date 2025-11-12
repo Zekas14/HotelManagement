@@ -1,4 +1,4 @@
-﻿namespace HotelManagement.Models
+namespace HotelManagement.Domain.Models
 {
     public class Room : BaseModel 
     {
@@ -20,4 +20,3 @@
     }
 
 }
-

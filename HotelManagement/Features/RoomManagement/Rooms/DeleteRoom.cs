@@ -1,12 +1,11 @@
-﻿using FastEndpoints;
-using FluentValidation;
+﻿using FluentValidation;
 using HotelManagement.Common;
 using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
-using HotelManagement.Data.Repositories;
+using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Features.Common.Queries;
-using HotelManagement.Models;
+using HotelManagement.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;

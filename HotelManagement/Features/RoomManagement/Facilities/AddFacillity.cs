@@ -3,9 +3,9 @@ using HotelManagement.Common;
 using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
-using HotelManagement.Data;
-using HotelManagement.Data.Repositories;
-using HotelManagement.Models;
+using HotelManagement.Domain.Models;
+using HotelManagement.Infrastructure.Data.Repositories;
+using HotelManagement.Infrastructure.Data;
 using MediatR;
 using System.Reflection.Metadata;
 
@@ -40,7 +40,7 @@ namespace HotelManagement.Features.RoomManagement.Facilities
 
         public  Task<RequestResult<bool>> Handle(AddFacillityCommand request, CancellationToken cancellationToken)
         {
-            var facility = new Models.Facility
+            var facility = new Facility
             {
                 Name = request.Name
             };

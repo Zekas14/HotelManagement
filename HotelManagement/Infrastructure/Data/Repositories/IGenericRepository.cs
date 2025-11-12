@@ -1,9 +1,9 @@
-﻿using HotelManagement.Models;
+using HotelManagement.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 
-namespace HotelManagement.Data.Repositories
+namespace HotelManagement.Infrastructure.Data.Repositories
 {
     public interface IGenericRepository<Entity> where Entity : BaseModel
     {
@@ -22,14 +22,15 @@ namespace HotelManagement.Data.Repositories
         Task SaveChangesAsync();
         void AddRange(IEnumerable<Entity> entities);
     }
+
     public class GenericRepository<Entity>(ApplicationDbContext context) : IGenericRepository<Entity> where Entity : BaseModel
     {
         private readonly ApplicationDbContext _context = context;
-        private readonly DbSet<Entity> _dbSet= context.Set<Entity>();
+        private readonly DbSet<Entity> _dbSet = context.Set<Entity>();
 
         public void Add(Entity entity)
         {
-            entity.CreatedAt= DateTime.UtcNow;
+            entity.CreatedAt = DateTime.UtcNow;
             _dbSet.Add(entity);
         }
 
@@ -52,7 +53,7 @@ namespace HotelManagement.Data.Repositories
 
         public IQueryable<Entity> GetAll()
         {
-            return _dbSet.AsQueryable();
+            return _dbSet.Where(e => e.IsDeleted == false);
         }
 
         public IQueryable<Entity> GetAllByPage(int PageNumber, int PageSize)
@@ -64,7 +65,7 @@ namespace HotelManagement.Data.Repositories
 
         public Entity GetById(int id)
         {
-            return Get(e=> e.Id ==id).FirstOrDefault()!;
+            return Get(e => e.Id == id).FirstOrDefault()!;
         }
 
         public IQueryable<Entity> GetByPage(Expression<Func<Entity, bool>> predicate, int PageNumber, int PageSize)

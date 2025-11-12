@@ -1,9 +1,7 @@
 using FastEndpoints;
-using FluentValidation;
-using HotelManagement.Data;
-using HotelManagement.Data.Repositories;
+using HotelManagement.Infrastructure.Data;
+using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Features.RoomManagement;
-using HotelManagement.Features.RoomManagement.Rooms;
 using HotelManagement.Middlewares;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);

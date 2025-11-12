@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelManagement.Models
+namespace HotelManagement.Domain.Models
 {
-    public class RoomFacility:BaseModel
+    public class RoomFacility : BaseModel
     {
         public int RoomId { get; set; }
         public Room Room { get; set; }
@@ -12,6 +12,4 @@ namespace HotelManagement.Models
 
         public Facility Facility { get; set; }
     }
-    
 }
-
