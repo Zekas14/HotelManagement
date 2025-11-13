@@ -23,20 +23,19 @@ namespace HotelManagement.Features.RoomManagement.Rooms
 
         public int RoomNumber { get; set; }
 
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
+        public string? Name { get; set; }
+        public string? ImageUrl { get; set; }
         public int Capacity { get; set; }
-        public string Type { get; set; }
+        public string? Type { get; set; }
         public decimal PricePerNight { get; set; }
         public bool IsAvailable { get; set; }
     }
     public class AddRoomCommandValidator : AbstractValidator<AddRoomCommand>
     {
-        private readonly ApplicationDbContext context;
-
-        public AddRoomCommandValidator(ApplicationDbContext context)
+        private readonly IGenericRepository<Room> repository;
+        public AddRoomCommandValidator(IGenericRepository<Room> repository)
         {
-            this.context = context;
+            this.repository = repository;
             RuleFor(x => x.RoomNumber).GreaterThan(0);
             RuleFor(x => x.Capacity).GreaterThan(0);
             RuleFor(x => x.Type)
@@ -53,7 +52,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         }
         private bool BeUniqueRoomNumber(int roomNumber)
         {
-            return !context.Rooms.Any(r => r.RoomNumber == roomNumber);
+            return !repository.GetAll().Any(r => r.RoomNumber == roomNumber);
         }
     }
     #endregion

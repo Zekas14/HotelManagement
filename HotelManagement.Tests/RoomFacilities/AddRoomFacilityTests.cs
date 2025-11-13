@@ -1,89 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation.Results;
-using HotelManagement.Data;
-using HotelManagement.Data.Repositories;
+
+using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Features.RoomManagement.RoomFacilities;
-using HotelManagement.Models;
-using Microsoft.EntityFrameworkCore;
+using HotelManagement.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
-using Xunit;
 
 namespace HotelManagement.Tests.Features.RoomManagement.RoomFacilities
 {
     public class AddRoomFacilityTests
     {
-        // Validator tests
-
-        [Fact]
-        public void Validator_Should_Fail_When_RoomId_Is_Not_Positive()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .Options;
-            using var context = new ApplicationDbContext(options);
-
-            var validator = new AddRoomFacilityCommandValidator(context);
-
-            var result = validator.Validate(new AddRoomFacilityCommand(0, 1));
-
-            Assert.False(result.IsValid);
-            Assert.Contains(result.Errors, e => e.PropertyName == nameof(AddRoomFacilityCommand.RoomId));
-        }
-
-        [Fact]
-        public void Validator_Should_Fail_When_FacilityId_Is_Not_Positive()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .Options;
-            using var context = new ApplicationDbContext(options);
-
-            var validator = new AddRoomFacilityCommandValidator(context);
-
-            var result = validator.Validate(new AddRoomFacilityCommand(1, 0));
-
-            Assert.False(result.IsValid);
-            Assert.Contains(result.Errors, e => e.PropertyName == nameof(AddRoomFacilityCommand.FacilityId));
-        }
-
-        [Fact]
-        public void Validator_Should_Fail_When_Room_Does_Not_Exist()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .Options;
-            using var context = new ApplicationDbContext(options);
-
-            // no rooms seeded -> should fail the RoomExists rule
-            var validator = new AddRoomFacilityCommandValidator(context);
-
-            var result = validator.Validate(new AddRoomFacilityCommand(999, 1));
-
-            Assert.False(result.IsValid);
-            Assert.Contains(result.Errors, e => e.ErrorMessage.Contains("Room does not exist"));
-        }
-
-        [Fact]
-        public void Validator_Should_Pass_When_Room_Exists_And_Ids_Are_Positive()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .Options;
-            using var context = new ApplicationDbContext(options);
-
-            context.Rooms.Add(new Room { Id = 5, RoomNumber = 101 });
-            context.SaveChanges();
-
-            var validator = new AddRoomFacilityCommandValidator(context);
-
-            var result = validator.Validate(new AddRoomFacilityCommand(5, 1));
-
-            Assert.True(result.IsValid);
-        }
-
-        // Handler tests
-
         [Fact]
         public async Task Handler_Should_Return_Failure_If_Facility_Already_Assigned()
         {

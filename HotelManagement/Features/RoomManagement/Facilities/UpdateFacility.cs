@@ -18,22 +18,23 @@ namespace HotelManagement.Features.RoomManagement.Facilities
     #region Validator
     public class UpdateFacilityCommandValidator : AbstractValidator<UpdateFacilityCommand>
     {
-        private readonly ApplicationDbContext _context;
 
-        public UpdateFacilityCommandValidator(ApplicationDbContext context)
+        private readonly IGenericRepository<Facility> repository;
+
+        public UpdateFacilityCommandValidator(IGenericRepository<Facility> repository)
         {
-            _context = context;
+            this.repository = repository;
             RuleFor(x => x.Id).GreaterThan(0);
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .MaximumLength(100)
-                .Must((cmd, name) => BeUniqueName(cmd.Id, name))
+                .Must(BeUniqueName)
                 .WithMessage("Facility name already used");
         }
 
-        private bool BeUniqueName(int id, string name)
+        private bool BeUniqueName(string name)
         {
-            return !_context.Facilities.Any(f => f.Name == name && f.Id != id);
+            return !repository.GetAll().Any(f => f.Name == name);
         }
     }
     #endregion

@@ -15,11 +15,11 @@ namespace HotelManagement.Features.RoomManagement.Facilities
     public record AddFacillityCommand(string Name): IRequest<RequestResult<bool>>;
     public class AddFacillityCommandValidator : AbstractValidator<AddFacillityCommand>
     {
-        private readonly ApplicationDbContext context;
+        IGenericRepository<Facility> repository;
 
-        public AddFacillityCommandValidator(ApplicationDbContext context)
+        public AddFacillityCommandValidator(IGenericRepository<Facility> repository)
         {
-            this.context = context;
+            this.repository = repository;
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Facility name is required.")
                 .MaximumLength(100).WithMessage("Facility name must not exceed 100 characters.")
@@ -28,7 +28,7 @@ namespace HotelManagement.Features.RoomManagement.Facilities
         }
         private bool BeUniqueName(string name)
         {
-            return !context.Facilities.Any(f => f.Name == name);
+            return !repository.GetAll().Any(f => f.Name == name);
         }
     }
     #endregion

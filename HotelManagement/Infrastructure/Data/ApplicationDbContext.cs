@@ -13,7 +13,8 @@ namespace HotelManagement.Infrastructure.Data
         public DbSet<Facility> Facilities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Room>().Property(r => r.PricePerNight).HasColumnType("numeric(18,2)");
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

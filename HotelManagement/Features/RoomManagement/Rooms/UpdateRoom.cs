@@ -18,11 +18,12 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #region Validator
     public class UpdateRoomCommandValidator: AbstractValidator<UpdateRoomCommand>
     {
-        private readonly ApplicationDbContext context;
+        private readonly IGenericRepository<Room> repository;
 
-        public UpdateRoomCommandValidator(ApplicationDbContext context)
+
+        public UpdateRoomCommandValidator(IGenericRepository<Room> repository)
         {
-            this.context = context;
+            this.repository = repository;
             RuleFor(x => x.RoomNumber)
                 .GreaterThan(0)
                 .Must(BeUniqueRoomNumber)
@@ -38,7 +39,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         }
         private bool BeUniqueRoomNumber(int roomNumber)
         {
-            return !context.Rooms.Any(r => r.RoomNumber == roomNumber);
+            return !repository.GetAll().Any(r => r.RoomNumber == roomNumber);
         }
 
     }

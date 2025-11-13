@@ -1,9 +1,9 @@
 ﻿using Xunit;
 using Moq;
 using HotelManagement.Features.RoomManagement.Rooms;
-using HotelManagement.Models;
+using HotelManagement.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
-using HotelManagement.Data.Repositories;
+using HotelManagement.Infrastructure.Data.Repositories;
 
 namespace HotelManagement.Tests.Rooms
 {

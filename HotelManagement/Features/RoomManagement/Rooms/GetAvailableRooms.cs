@@ -68,8 +68,8 @@ namespace HotelManagement.Features.RoomManagement.Rooms
 
             if (request.FacilityIds is { Length: > 0 })
             {
-                var facilityIdsSet = request.FacilityIds;
-                query = query.Where(r => r.Facilities.All(rf => facilityIdsSet.Contains(rf.FacilityId)));
+                var facilityIdsSet = request.FacilityIds.ToHashSet();
+                query = query.Where(r => r.Facilities.Any(rf => facilityIdsSet.Contains(rf.FacilityId)));
             }
 
             var data = query

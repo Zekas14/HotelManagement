@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Moq;
 using Xunit;
 using HotelManagement.Features.RoomManagement.Facilities;
-using HotelManagement.Models;
-using HotelManagement.Data.Repositories;
+using HotelManagement.Domain.Models;
+using HotelManagement.Infrastructure.Data.Repositories;
 
 namespace HotelManagement.Tests.Facilities
 {
