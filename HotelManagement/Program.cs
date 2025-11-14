@@ -4,6 +4,7 @@ using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Features.RoomManagement;
 using HotelManagement.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using HotelManagement.Features.ReservationManagement;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddFastEndpoints();
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 builder.Services.AddMemoryCache();
 builder.Services.AddRoomManagementFeatures();
+builder.Services.AddReservationManagementFeatures();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 var app = builder.Build();

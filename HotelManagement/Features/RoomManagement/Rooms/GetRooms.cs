@@ -11,12 +11,13 @@ using System.Reflection.Metadata;
 namespace HotelManagement.Features.RoomManagement.Rooms
 {
     #region Query
-    public record GetRoomsQuery :IRequest<RequestResult<IReadOnlyList<GetRoomsResponseDto>>>;
+    public record GetRoomsQuery :IRequest<RequestResult<IReadOnlyList<GetRoomResponseDto>>>;
     #endregion
 
     #region Dto
-    public record GetRoomsResponseDto
+    public record GetRoomResponseDto
     {
+        public int Id { get; set; }
         public int RoomNumber { get; set; }
         public string  Name { get; set; }
         public string  ImageUrl { get; set; }
@@ -29,20 +30,21 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     #endregion
 
     #region Handler 
-    public class GetRoomsHandler(IGenericRepository<Room> roomRepository, IMemoryCache cache) : IRequestHandler<GetRoomsQuery, RequestResult<IReadOnlyList<GetRoomsResponseDto>>>
+    public class GetRoomsHandler(IGenericRepository<Room> roomRepository, IMemoryCache cache) : IRequestHandler<GetRoomsQuery, RequestResult<IReadOnlyList<GetRoomResponseDto>>>
     {
         private readonly IGenericRepository<Room> roomRepository = roomRepository;
         private readonly IMemoryCache cache = cache;
-        public async Task<RequestResult<IReadOnlyList<GetRoomsResponseDto>>> Handle(GetRoomsQuery request, CancellationToken cancellationToken)
+        public async Task<RequestResult<IReadOnlyList<GetRoomResponseDto>>> Handle(GetRoomsQuery request, CancellationToken cancellationToken)
         {
-            if (cache.TryGetValue("rooms", out IReadOnlyList<GetRoomsResponseDto>? cachedRooms))
+            if (cache.TryGetValue("rooms", out IReadOnlyList<GetRoomResponseDto>? cachedRooms))
             {
-                return RequestResult<IReadOnlyList<GetRoomsResponseDto>>.Success(cachedRooms!, "Rooms retrieved successfully from cache");
+                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success(cachedRooms!, "Rooms retrieved successfully from cache");
             }
 
             var data = roomRepository.GetAll()
-                .Select(e => new GetRoomsResponseDto
+                .Select(e => new GetRoomResponseDto
                 {
+                    Id = e.Id,
                     Capacity = e.Capacity,
                     ImageUrl = e.ImageUrl,
                     IsAvailable = e.IsAvailable,
@@ -54,10 +56,10 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                 });
             if (!data.Any())
             {
-                return RequestResult<IReadOnlyList<GetRoomsResponseDto>>.Failure("No rooms found");
+                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure("No rooms found");
             } ;
             cache.Set("rooms", data.ToList(), TimeSpan.FromMinutes(20));
-            return RequestResult<IReadOnlyList<GetRoomsResponseDto>>.Success([.. data], "Rooms retrieved successfully");
+            return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success([.. data], "Rooms retrieved successfully");
         }
     }
     #endregion
@@ -74,8 +76,8 @@ namespace HotelManagement.Features.RoomManagement.Rooms
             var query = new GetRoomsQuery();
             var result = await mediator.Send(query, ct);
             IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<IReadOnlyList<GetRoomsResponseDto>>(result.Data, result.Message)
-                : FailureEndpointResult<IReadOnlyList<GetRoomsResponseDto>>.BadRequest(result.Message);
+                ? new SuccessEndpointResult<IReadOnlyList<GetRoomResponseDto>>(result.Data, result.Message)
+                : FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>.BadRequest(result.Message);
             await Send.ResultAsync(response);
         }
 

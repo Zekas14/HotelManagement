@@ -10,7 +10,7 @@ namespace HotelManagement.Infrastructure.Configuration
         {
             builder.HasKey(f => f.Id);
             builder.Property(f => f.Name).IsRequired();
-            builder.HasIndex(f=>f.Name).IsUnique();
+            builder.HasIndex(f => f.Name).IsUnique();
         }
     }
 }

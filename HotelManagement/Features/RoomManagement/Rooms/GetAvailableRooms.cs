@@ -6,6 +6,7 @@ using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
+using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Features.RoomManagement.Rooms
 {
@@ -17,24 +18,24 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         decimal? MaxPrice = null,
         int[]? FacilityIds = null,
         bool OnlyAvailable = true
-    ) : IRequest<RequestResult<IReadOnlyList<GetRoomsResponseDto>>>; 
+    ) : IRequest<RequestResult<IReadOnlyList<GetRoomResponseDto>>>; 
     #endregion
 
     #region Handler
-    public class GetAvailableRoomsHandler(IGenericRepository<Room> roomRepository, IMemoryCache cache) : IRequestHandler<GetAvailableRoomsQuery, RequestResult<IReadOnlyList<GetRoomsResponseDto>>>
+    public class GetAvailableRoomsHandler(IGenericRepository<Room> roomRepository, IMemoryCache cache) : IRequestHandler<GetAvailableRoomsQuery, RequestResult<IReadOnlyList<GetRoomResponseDto>>>
     {
         private readonly IGenericRepository<Room> roomRepository = roomRepository;
         private readonly IMemoryCache cache = cache;
 
-        public async Task<RequestResult<IReadOnlyList<GetRoomsResponseDto>>> Handle(GetAvailableRoomsQuery request, CancellationToken cancellationToken)
+        public async Task<RequestResult<IReadOnlyList<GetRoomResponseDto>>> Handle(GetAvailableRoomsQuery request, CancellationToken cancellationToken)
         {
             // Build a cache key based on filters
             var facilityKey = request.FacilityIds is null ? "none" : string.Join('-', request.FacilityIds.OrderBy(x => x));
             var cacheKey = $"available_rooms_{request.Capacity}_{request.Type}_{request.MinPrice}_{request.MaxPrice}_{facilityKey}_{request.OnlyAvailable}";
 
-            if (cache.TryGetValue(cacheKey, out IReadOnlyList<GetRoomsResponseDto>? cached))
+            if (cache.TryGetValue(cacheKey, out IReadOnlyList<GetRoomResponseDto>? cached))
             {
-                return RequestResult<IReadOnlyList<GetRoomsResponseDto>>.Success(cached!, "Available rooms retrieved from cache");
+                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success(cached!, "Available rooms retrieved from cache");
             }
 
             var query = roomRepository.GetAll();
@@ -52,7 +53,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                 }
                 else
                 {
-                    return RequestResult<IReadOnlyList<GetRoomsResponseDto>>.Failure("Invalid room type filter.");
+                    return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure("Invalid room type filter.");
                 }
             }
 
@@ -73,8 +74,9 @@ namespace HotelManagement.Features.RoomManagement.Rooms
             }
 
             var data = query
-                .Select(e => new GetRoomsResponseDto
+                .Select(e => new GetRoomResponseDto
                 {
+                    Id = e.Id,
                     Capacity = e.Capacity,
                     ImageUrl = e.ImageUrl,
                     IsAvailable = e.IsAvailable,
@@ -87,13 +89,13 @@ namespace HotelManagement.Features.RoomManagement.Rooms
 
             if (!data.Any())
             {
-                return RequestResult<IReadOnlyList<GetRoomsResponseDto>>.Failure("No rooms match the given preferences.");
+                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure("No rooms match the given preferences.");
             }
 
             var resultList = data.ToList();
             cache.Set(cacheKey, resultList, TimeSpan.FromMinutes(15));
 
-            return RequestResult<IReadOnlyList<GetRoomsResponseDto>>.Success(resultList, "Available rooms retrieved successfully");
+            return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success(resultList, "Available rooms retrieved successfully");
         }
     }
     #endregion
@@ -122,8 +124,8 @@ namespace HotelManagement.Features.RoomManagement.Rooms
 
             var result = await mediator.Send(query, ct);
             IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<IReadOnlyList<GetRoomsResponseDto>>(result.Data, result.Message)
-                : FailureEndpointResult<IReadOnlyList<GetRoomsResponseDto>>.BadRequest(result.Message);
+                ? new SuccessEndpointResult<IReadOnlyList<GetRoomResponseDto>>(result.Data, result.Message)
+                : FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>.BadRequest(result.Message);
             await Send.ResultAsync(response);
         }
     }

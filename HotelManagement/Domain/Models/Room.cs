@@ -1,3 +1,5 @@
+using HotelManagement.Domain.Enums;
+
 namespace HotelManagement.Domain.Models
 {
     public class Room : BaseModel 
@@ -11,12 +13,6 @@ namespace HotelManagement.Domain.Models
         public bool IsAvailable { get; set; }
         public ICollection<RoomFacility>? Facilities { get; set; }
     }
-    public enum RoomType
-    {
-        Single,
-        Double,
-        Suite,
-        Deluxe
-    }
+    
 
 }

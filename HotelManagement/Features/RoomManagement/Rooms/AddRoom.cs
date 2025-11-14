@@ -8,6 +8,7 @@ using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
+using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Features.RoomManagement.Rooms
 {

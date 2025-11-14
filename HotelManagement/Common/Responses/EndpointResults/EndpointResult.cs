@@ -8,7 +8,7 @@ namespace HotelManagement.Common.Responses.EndpointResults
         public bool IsSuccess { get; set; } = true;
         public ErrorCode ErrorCode { get; set; }
         public string Message { get; set; }
-
+        
 
         public async Task ExecuteAsync(HttpContext httpContext)
         {
