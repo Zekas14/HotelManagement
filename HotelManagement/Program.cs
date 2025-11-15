@@ -1,10 +1,11 @@
 using FastEndpoints;
+using HotelManagement.Features.ReservationManagement;
+using HotelManagement.Features.RoomManagement;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Repositories;
-using HotelManagement.Features.RoomManagement;
-using HotelManagement.Middlewares;
+using HotelManagement.Infrastructure.Data.Seeds;
+using HotelManagement.Infrastructure.Middlewares;
 using Microsoft.EntityFrameworkCore;
-using HotelManagement.Features.ReservationManagement;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddFastEndpoints();
@@ -27,6 +28,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    DatabaseSeeder.Seed(context);
 }
 
 app.UseHttpsRedirection();

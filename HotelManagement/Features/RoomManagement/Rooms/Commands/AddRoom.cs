@@ -10,7 +10,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Features.RoomManagement.Rooms
+namespace HotelManagement.Features.RoomManagement.Rooms.Commands
 {
 
     #region Command 
@@ -24,9 +24,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
 
         public int RoomNumber { get; set; }
 
-        public string? Name { get; set; }
         public string? ImageUrl { get; set; }
-        public int Capacity { get; set; }
         public string? Type { get; set; }
         public decimal PricePerNight { get; set; }
         public bool IsAvailable { get; set; }
@@ -38,14 +36,12 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         {
             this.repository = repository;
             RuleFor(x => x.RoomNumber).GreaterThan(0);
-            RuleFor(x => x.Capacity).GreaterThan(0);
             RuleFor(x => x.Type)
                 .NotEmpty()
                 .MaximumLength(20)
                 .Must(type => new List<string> { "Single", "Double", "Suite", "Deluxe" }.Contains(type))
                 .WithMessage("Type must be one of: Single, Double, Suite, Deluxe.");
             RuleFor(x => x.PricePerNight).GreaterThan(0);
-            RuleFor(x=>x.Name).NotEmpty().MinimumLength(2).MaximumLength(100);
             RuleFor(x=>x.ImageUrl).NotEmpty().MinimumLength(2);
             RuleFor(x => x.RoomNumber)
                 .Must(BeUniqueRoomNumber)
@@ -72,9 +68,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
             repository.Add(new Room
             {
                 RoomNumber = request.RoomNumber,
-                Name = request.Name,
                 ImageUrl = request.ImageUrl,
-                Capacity = request.Capacity,
                 Type = Enum.Parse<RoomType>(request.Type),
                 PricePerNight = request.PricePerNight,
                 IsAvailable = request.IsAvailable,

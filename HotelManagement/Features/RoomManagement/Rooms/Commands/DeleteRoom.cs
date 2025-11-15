@@ -10,7 +10,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace HotelManagement.Features.RoomManagement.Rooms
+namespace HotelManagement.Features.RoomManagement.Rooms.Commands
 {
     #region Command    
     public record DeleteRoomCommand( int RoomID): IRequest<RequestResult<bool>>;

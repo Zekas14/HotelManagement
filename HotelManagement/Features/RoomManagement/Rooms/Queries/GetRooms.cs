@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using System.Reflection.Metadata;
 
-namespace HotelManagement.Features.RoomManagement.Rooms
+namespace HotelManagement.Features.RoomManagement.Rooms.Queries
 {
     #region Query
     public record GetRoomsQuery :IRequest<RequestResult<IReadOnlyList<GetRoomResponseDto>>>;
@@ -19,10 +19,8 @@ namespace HotelManagement.Features.RoomManagement.Rooms
     {
         public int Id { get; set; }
         public int RoomNumber { get; set; }
-        public string  Name { get; set; }
         public string  ImageUrl { get; set; }
         public string CreatedDate { get; set; }
-        public int Capacity { get; set; }
         public string Type { get; set; }
         public IEnumerable<string>? Facilities { get; set; }
         public bool IsAvailable { get; set; }
@@ -45,11 +43,9 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                 .Select(e => new GetRoomResponseDto
                 {
                     Id = e.Id,
-                    Capacity = e.Capacity,
                     ImageUrl = e.ImageUrl,
                     IsAvailable = e.IsAvailable,
                     RoomNumber = e.RoomNumber,
-                    Name = e.Name,
                     Facilities = e.Facilities!.Select(rf => rf.Facility!.Name),
                     Type = e.Type.ToString(),
                     CreatedDate = e.CreatedAt.ToString(Constants.DateTimeFormat),

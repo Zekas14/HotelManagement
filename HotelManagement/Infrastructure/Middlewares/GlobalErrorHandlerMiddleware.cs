@@ -1,6 +1,6 @@
 ﻿using HotelManagement.Common.Responses.EndpointResults;
 
-namespace HotelManagement.Middlewares
+namespace HotelManagement.Infrastructure.Middlewares
 {
     public class GlobalErrorHandlerMiddleware
 

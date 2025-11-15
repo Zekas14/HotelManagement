@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Features.RoomManagement.Rooms
+namespace HotelManagement.Features.RoomManagement.Rooms.Queries
 {
     #region Query
     public record GetAvailableRoomsQuery(
@@ -38,13 +38,9 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                 return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success(cached!, "Available rooms retrieved from cache");
             }
 
-            var query = roomRepository.GetAll();
+            var query = roomRepository.Get(r=>r.IsAvailable);
 
-            if (request.Capacity.HasValue)
-            {
-                query = query.Where(r => r.Capacity == request.Capacity.Value);
-            }
-
+          
             if (!string.IsNullOrWhiteSpace(request.Type))
             {
                 if (Enum.TryParse<RoomType>(request.Type, ignoreCase: true, out var parsedType))
@@ -77,11 +73,9 @@ namespace HotelManagement.Features.RoomManagement.Rooms
                 .Select(e => new GetRoomResponseDto
                 {
                     Id = e.Id,
-                    Capacity = e.Capacity,
                     ImageUrl = e.ImageUrl,
                     IsAvailable = e.IsAvailable,
                     RoomNumber = e.RoomNumber,
-                    Name = e.Name,
                     Facilities = e.Facilities!.Select(rf => rf.Facility!.Name),
                     Type = e.Type.ToString(),
                     CreatedDate = e.CreatedAt.ToString(Constants.DateTimeFormat),

@@ -9,7 +9,7 @@ using HotelManagement.Features.Common.Queries;
 using HotelManagement.Domain.Models;
 using MediatR;
 
-namespace HotelManagement.Features.RoomManagement.Rooms
+namespace HotelManagement.Features.RoomManagement.Rooms.Commands
 {
     #region Command 
     public record UpdateRoomCommand(int RoomID, int RoomNumber, string Name,int Capacity, string Type, decimal PricePerNight, bool IsAvailable) : IRequest<RequestResult<bool>>;
@@ -55,7 +55,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms
         {
           var isRoomExistsResult = await mediator.Send(new IsEntityExistsQuery<Room>(request.RoomID),cancellationToken);
             string[] values =
-                [nameof(Room.RoomNumber), nameof(Room.Name), nameof(Room.Capacity), nameof(Room.Type), nameof(Room.PricePerNight), nameof(Room.IsAvailable)];
+                [nameof(Room.RoomNumber), nameof(Room.Type), nameof(Room.PricePerNight), nameof(Room.IsAvailable)];
 
             repository.SaveInclude(isRoomExistsResult.Data,values);
             await repository.SaveChangesAsync();

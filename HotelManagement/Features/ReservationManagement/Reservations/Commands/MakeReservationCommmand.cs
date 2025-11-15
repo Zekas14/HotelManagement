@@ -5,6 +5,7 @@ using HotelManagement.Common.Modules;
 using HotelManagement.Common.Responses;
 using HotelManagement.Common.Responses.EndpointResults;
 using HotelManagement.Domain.Models;
+using HotelManagement.Features.ReservationManagement.Reservations.Events;
 using HotelManagement.Features.ReservationManagement.Reservations.Queries;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
@@ -12,7 +13,7 @@ using MediatR;
 namespace HotelManagement.Features.ReservationManagement.Reservations.Commands
 {
     #region Command
-    public record MakeReservationCommmand(
+    public record MakeReservationCommmand   (
         DateTime CheckInDate,
         DateTime CheckOutDate,
         int RoomId,
@@ -22,7 +23,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands
     ) : IRequest<RequestResult<bool>>;
     #endregion
 
-    #region Dto & Validator
+    #region  Validator
 
         public class MakeReservationValidator : AbstractValidator<MakeReservationCommmand>
         {
@@ -34,7 +35,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands
                     .LessThan(x => x.CheckOutDate)
                     .WithMessage("Check-in date must be before check-out date.");
                 RuleFor(x => x.CheckInDate)
-                    .LessThan(DateTime.Now)
+                    .GreaterThanOrEqualTo(DateTime.Now)
                     .WithMessage("Chacke-in Date is Passed");
                 RuleFor(x => x.NumberOfGuests)
                     .GreaterThan(0)
@@ -57,38 +58,37 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands
                 return repository.GetAll().Any(r => r.Id == roomId);
             }
         }
-        #endregion
+    #endregion
 
     #region Handler
 
-        public class MakeReservationHandler(IGenericRepository<Reservation> repository, IMediator mediator) : IRequestHandler<MakeReservationCommmand, RequestResult<bool>>
-        {
+    public class MakeReservationHandler(IGenericRepository<Reservation> repository, IMediator mediator) : IRequestHandler<MakeReservationCommmand, RequestResult<bool>>
+    {
             private readonly IGenericRepository<Reservation> repository = repository;
             private readonly IMediator mediator = mediator;
 
             public async Task<RequestResult<bool>> Handle(MakeReservationCommmand request, CancellationToken cancellationToken)
             {
-                var isRoomAvailable = await mediator.Send(new CheckRoomAvailabilityQuery(request.RoomId, request.CheckInDate, request.CheckOutDate), cancellationToken);
-                if (!isRoomAvailable)
-                {
-                    return RequestResult<bool>.Failure("Room is not available for the selected dates.");
-                }
-
-                var reservation = new Reservation
-                {
-                    CheckInDate = request.CheckInDate,
-                    CheckOutDate = request.CheckOutDate,
-                    RoomId = request.RoomId,
-                    GuestId = request.GuestId,
-                    NumberOfGuests = request.NumberOfGuests,
-                    TotalPrice = ((request.CheckOutDate - request.CheckInDate).Days) * request.PricePerNight
-                };
-                repository.Add(reservation);
-                repository.SaveChanges();
-                return RequestResult<bool>.Success(true);
+            var isRoomAvailable = await mediator.Send(new CheckRoomAvailabilityQuery(request.RoomId, request.CheckInDate, request.CheckOutDate), cancellationToken);
+            if (!isRoomAvailable)
+            {
+                return RequestResult<bool>.Failure("Room is not available for the selected dates.");
             }
-            
+            var reservation = new Reservation
+            {
+                CheckInDate = request.CheckInDate,
+                CheckOutDate = request.CheckOutDate,
+                RoomId = request.RoomId,
+                GuestId = request.GuestId,
+                NumberOfGuests = request.NumberOfGuests,
+                TotalPrice = ((request.CheckOutDate - request.CheckInDate).Days) * request.PricePerNight
+            };
+            repository.Add(reservation);
+            await mediator.Publish(new MakeReservationEvent(request.RoomId));
+            return RequestResult<bool>.Success(true);
         }
+
+    }
 
     #endregion
 
