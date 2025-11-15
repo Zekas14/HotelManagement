@@ -1,10 +1,10 @@
-using HotelManagement.Common;
-using HotelManagement.Common.Modules;
-using HotelManagement.Common.Responses;
-using HotelManagement.Common.Responses.EndpointResults;
 using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Domain.Models;
 using MediatR;
+using HotelManagement.Features.Common.Endpoints;
+using HotelManagement.Features.Common.Responses;
+using HotelManagement.Features.Common.Responses.EndpointResults;
+using HotelManagement.Features.Common;
 
 namespace HotelManagement.Features.RoomManagement.Facilities
 {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 
-namespace HotelManagement.Common.Modules
+namespace HotelManagement.Features.Common.Endpoints
 {
     public abstract class DeleteEndpoint<TRequest>(IMediator mediator,IValidator<TRequest> validator) : BaseEndpoint<TRequest, bool>(mediator, validator)
     {

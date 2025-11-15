@@ -1,8 +1,8 @@
 ﻿using FastEndpoints;
-using HotelManagement.Common.Responses.EndpointResults;
+using HotelManagement.Features.Common.Responses.EndpointResults;
 using MediatR;
 
-namespace HotelManagement.Common.Modules
+namespace HotelManagement.Features.Common.Endpoints
 {
     public abstract class GetEndpoint<TResponseType>(IMediator mediator) : EndpointWithoutRequest<EndpointResult<TResponseType>>
     {
@@ -11,6 +11,7 @@ namespace HotelManagement.Common.Modules
         override public void Configure()
         {
             Get(GetRoute());
+            Throttle(hitLimit: 5, durationSeconds: 60);
             AllowAnonymous();
         }
     }

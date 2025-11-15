@@ -1,4 +1,4 @@
-﻿using HotelManagement.Common.Responses.EndpointResults;
+﻿using HotelManagement.Features.Common.Responses.EndpointResults;
 
 namespace HotelManagement.Infrastructure.Middlewares
 {

@@ -1,4 +1,4 @@
-﻿namespace HotelManagement.Common.Responses
+﻿namespace HotelManagement.Features.Common.Responses
 {
     public class RequestResult<T>(T data, bool isSuccess, string message)
     {

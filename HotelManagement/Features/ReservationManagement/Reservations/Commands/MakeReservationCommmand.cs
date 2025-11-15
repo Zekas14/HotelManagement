@@ -1,10 +1,10 @@
 ﻿using FastEndpoints;
 using FluentValidation;
-using HotelManagement.Common;
-using HotelManagement.Common.Modules;
-using HotelManagement.Common.Responses;
-using HotelManagement.Common.Responses.EndpointResults;
 using HotelManagement.Domain.Models;
+using HotelManagement.Features.Common;
+using HotelManagement.Features.Common.Endpoints;
+using HotelManagement.Features.Common.Responses;
+using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.ReservationManagement.Reservations.Events;
 using HotelManagement.Features.ReservationManagement.Reservations.Queries;
 using HotelManagement.Infrastructure.Data.Repositories;

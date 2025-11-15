@@ -1,4 +1,4 @@
-﻿namespace HotelManagement.Common.Responses.EndpointResults
+﻿namespace HotelManagement.Features.Common.Responses.EndpointResults
 {
     public class FailureEndpointResult<T> : EndpointResult<T>
     {

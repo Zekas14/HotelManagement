@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace HotelManagement.Common.Responses.EndpointResults
+namespace HotelManagement.Features.Common.Responses.EndpointResults
 {
     public abstract  class EndpointResult<T> : IResult
     {
@@ -45,5 +45,6 @@ namespace HotelManagement.Common.Responses.EndpointResults
         InternalServerError = 405,
         EmailAlreadyConfirmed = 409,
         InternalError = 410,
+        LimitReached = 429,
     }
 }

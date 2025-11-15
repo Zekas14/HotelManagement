@@ -1,10 +1,10 @@
 ﻿using FastEndpoints;
 using FluentValidation;
-using HotelManagement.Common.Responses.EndpointResults;
+using HotelManagement.Features.Common.Responses.EndpointResults;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 
-namespace HotelManagement.Common.Modules
+namespace HotelManagement.Features.Common.Endpoints
 {
     public abstract class BaseEndpoint<TRequest, TResponseType>(IMediator mediator, IValidator<TRequest> validator) : Endpoint<TRequest, EndpointResult<TResponseType>>
     {

@@ -1,4 +1,4 @@
-﻿namespace HotelManagement.Common
+﻿namespace HotelManagement.Features.Common
 {
     public static class Constants
     {

@@ -1,5 +1,5 @@
-﻿using HotelManagement.Common.Responses;
-using HotelManagement.Domain.Models;
+﻿using HotelManagement.Domain.Models;
+using HotelManagement.Features.Common.Responses;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
