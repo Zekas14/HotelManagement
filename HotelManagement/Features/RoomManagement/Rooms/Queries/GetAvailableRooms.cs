@@ -47,10 +47,6 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries
                 {
                     query = query.Where(r => r.Type == parsedType);
                 }
-                else
-                {
-                    return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure("Invalid room type filter.");
-                }
             }
 
             if (request.MinPrice.HasValue)
@@ -83,7 +79,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries
 
             if (!data.Any())
             {
-                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure("No rooms match the given preferences.");
+                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure(ErrorCode.NotFound, "No rooms match the given preferences.");
             }
 
             var resultList = data.ToList();

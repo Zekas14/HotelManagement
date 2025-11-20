@@ -50,7 +50,7 @@ namespace HotelManagement.Features.RoomManagement.Facilities
            var isFacilityExists=  await mediator.Send(new IsEntityExistsQuery<Facility>(request.Id), cancellationToken);
             if (!isFacilityExists.IsSuccess)
             {
-                return RequestResult<bool>.Failure(isFacilityExists.Message);
+                return RequestResult<bool>.Failure(isFacilityExists.ErrorCode,isFacilityExists.Message);
             }
             _repository.SaveInclude(isFacilityExists.Data, nameof(Facility.Name));
             await _repository.SaveChangesAsync();

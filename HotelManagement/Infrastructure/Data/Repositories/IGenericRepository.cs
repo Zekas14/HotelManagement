@@ -8,8 +8,11 @@ namespace HotelManagement.Infrastructure.Data.Repositories
     public interface IGenericRepository<Entity> where Entity : BaseModel
     {
         IQueryable<Entity> GetAll();
+        IQueryable<Entity> GetAllWithDeleted();
+        IQueryable<Entity> GetDeleted();
         IQueryable<Entity> Get(Expression<Func<Entity,bool>> predicate);
         IQueryable<Entity> GetAllByPage(int PageNumber, int PageSize);
+
         IQueryable<Entity> GetByPage(Expression<Func<Entity,bool>> predicate, int PageNumber, int PageSize);
         void Add(Entity entity);
         void SaveInclude(Entity entity, params string[] properties);
@@ -49,6 +52,14 @@ namespace HotelManagement.Infrastructure.Data.Repositories
         public IQueryable<Entity> Get(Expression<Func<Entity, bool>> predicate)
         {
             return GetAll().Where(predicate);
+        }
+        public IQueryable<Entity> GetAllWithDeleted()
+        {
+            return _dbSet;
+        }
+        public IQueryable<Entity> GetDeleted()
+        {
+            return GetAllWithDeleted().Where(e => e.IsDeleted == true);
         }
 
         public IQueryable<Entity> GetAll()

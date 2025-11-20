@@ -52,7 +52,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries
                 });
             if (!data.Any())
             {
-                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure("No rooms found");
+                return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Failure(ErrorCode.NotFound,"No rooms found");
             } ;
             cache.Set("rooms", data.ToList(), TimeSpan.FromMinutes(20));
             return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success([.. data], "Rooms retrieved successfully");

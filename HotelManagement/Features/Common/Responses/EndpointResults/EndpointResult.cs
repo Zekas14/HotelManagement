@@ -46,5 +46,7 @@ namespace HotelManagement.Features.Common.Responses.EndpointResults
         EmailAlreadyConfirmed = 409,
         InternalError = 410,
         LimitReached = 429,
+        FacilityAlreadyAssignedToRoom = 430,
+        RoomIsUnavailable = 431,
     }
 }

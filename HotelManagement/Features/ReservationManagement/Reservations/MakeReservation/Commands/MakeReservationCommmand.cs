@@ -1,16 +1,13 @@
-﻿using FastEndpoints;
-using FluentValidation;
+﻿using FluentValidation;
 using HotelManagement.Domain.Models;
-using HotelManagement.Features.Common;
-using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
-using HotelManagement.Features.ReservationManagement.Reservations.Events;
-using HotelManagement.Features.ReservationManagement.Reservations.Queries;
+using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Events;
+using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Queries;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
-namespace HotelManagement.Features.ReservationManagement.Reservations.Commands
+namespace HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Commands
 {
     #region Command
     public record MakeReservationCommmand   (
@@ -72,7 +69,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands
             var isRoomAvailable = await mediator.Send(new CheckRoomAvailabilityQuery(request.RoomId, request.CheckInDate, request.CheckOutDate), cancellationToken);
             if (!isRoomAvailable)
             {
-                return RequestResult<bool>.Failure("Room is not available for the selected dates.");
+                return RequestResult<bool>.Failure(ErrorCode.RoomIsUnavailable,"Room is not available for the selected dates.");
             }
             var reservation = new Reservation
             {
@@ -84,35 +81,13 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands
                 TotalPrice = ((request.CheckOutDate - request.CheckInDate).Days) * request.PricePerNight
             };
             repository.Add(reservation);
-            await mediator.Publish(new MakeReservationEvent(request.RoomId));
+            await mediator.Publish(new OnMakingReservationEvent(request.RoomId));
             return RequestResult<bool>.Success(true);
         }
 
     }
 
     #endregion
-
-    #region Endpoint
-    public class MakeReservationEndpoint(IMediator mediator ,IValidator<MakeReservationCommmand> validator) : PostEndpoint<MakeReservationCommmand, bool>(validator,mediator)
-    {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/reservations/makeReservation";
-        public override async Task HandleAsync(MakeReservationCommmand req, CancellationToken ct)
-        {
-            var validationResult = await Validate(req);
-            if (!validationResult.IsSuccess)
-            {
-                await Send.ResultAsync(validationResult);
-                return;
-            }
-            var result = await mediator.Send(req, ct);
-            IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<bool>(result.Data, result.Message)
-                : FailureEndpointResult<bool>.BadRequest(result.Message);
-            await Send.ResultAsync(response);
-            
-        }
-    }
-    #endregion
-
+    
 }
  

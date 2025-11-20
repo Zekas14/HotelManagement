@@ -1,5 +1,6 @@
 ﻿using HotelManagement.Domain.Models;
 using HotelManagement.Features.Common.Responses;
+using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
@@ -13,8 +14,9 @@ namespace HotelManagement.Features.Common.Queries
         {
             var entity = _repository.GetById(request.Id);
             if (entity == null)
+
             {
-                return RequestResult<Entity>.Failure($"{request.Id} does not exist.");
+                return RequestResult<Entity>.Failure(ErrorCode.NotFound,$"{nameof(Entity)} does not exist.");
             }
             return RequestResult<Entity>.Success(entity,$"{request.Id} exists.");
         }

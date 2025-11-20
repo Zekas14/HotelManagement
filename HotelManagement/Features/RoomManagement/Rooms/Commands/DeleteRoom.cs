@@ -36,7 +36,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands
             var isRoomExistsResult = await mediator.Send(new IsEntityExistsQuery<Room>(request.RoomID),cancellationToken);
             if (!isRoomExistsResult.IsSuccess)
             {
-                return RequestResult<bool>.Failure(isRoomExistsResult.Message);
+                return RequestResult<bool>.Failure(ErrorCode.NotFound,isRoomExistsResult.Message);
             }
             repository.Delete(request.RoomID);
             await repository.SaveChangesAsync();

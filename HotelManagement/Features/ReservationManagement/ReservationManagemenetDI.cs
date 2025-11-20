@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using HotelManagement.Features.ReservationManagement.Reservations.Commands;
+using HotelManagement.Features.ReservationManagement.Reservations.CancelReservation.Commands;
+using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Commands;
 
 namespace HotelManagement.Features.ReservationManagement
 {
@@ -8,6 +9,7 @@ namespace HotelManagement.Features.ReservationManagement
         public static IServiceCollection AddReservationManagementFeatures(this IServiceCollection services)
         {
             services.AddScoped<IValidator<MakeReservationCommmand>, MakeReservationValidator>();
+            services.AddScoped<IValidator<CancelReservationCommand>, CancelReservationValidator>();
             return services;
         }
     }

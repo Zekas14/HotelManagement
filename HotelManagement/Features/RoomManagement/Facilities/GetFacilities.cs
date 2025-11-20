@@ -5,6 +5,7 @@ using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.Common;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace HotelManagement.Features.RoomManagement.Facilities
 {
@@ -38,7 +39,7 @@ namespace HotelManagement.Features.RoomManagement.Facilities
 
             if (!data.Any())
             {
-                return Task.FromResult(RequestResult<IReadOnlyList<GetFacilitiesResponseDto>>.Failure("No facilities found"));
+                return Task.FromResult(RequestResult<IReadOnlyList<GetFacilitiesResponseDto>>.Failure(ErrorCode.NotFound,"No facilities found"));
             }
 
             return Task.FromResult(RequestResult<IReadOnlyList<GetFacilitiesResponseDto>>.Success(data.ToList(), "Facilities retrieved successfully"));

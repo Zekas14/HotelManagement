@@ -1,15 +1,15 @@
 ﻿using HotelManagement.Domain.Models;
-using HotelManagement.Features.ReservationManagement.Reservations.Events;
+using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Events;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
 namespace HotelManagement.Features.RoomManagement.Rooms.EventHandlers
 {
-    public class MakeReservationEventHandler(IGenericRepository<Room> repository) : INotificationHandler<MakeReservationEvent>
+    public class OnMakingReservationEventHandler(IGenericRepository<Room> repository) : INotificationHandler<OnMakingReservationEvent>
     {
         private readonly IGenericRepository<Room> repository = repository;
 
-        public async Task Handle(MakeReservationEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(OnMakingReservationEvent notification, CancellationToken cancellationToken)
         {
             var room = new Room
             {

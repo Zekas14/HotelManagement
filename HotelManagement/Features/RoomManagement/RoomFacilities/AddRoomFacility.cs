@@ -51,7 +51,7 @@ namespace HotelManagement.Features.RoomManagement.RoomFacilities
                 .Any(rf => rf.RoomId == request.RoomId && rf.FacilityId == request.FacilityId);
                 
             if (IsFacilityAssignedToRoom)
-                return RequestResult<bool>.Failure("Facility already assigned to room.");
+                return RequestResult<bool>.Failure(ErrorCode.FacilityAlreadyAssignedToRoom, "Facility already assigned to room.");
             _repository.Add(new RoomFacility
             {
                 RoomId = request.RoomId,

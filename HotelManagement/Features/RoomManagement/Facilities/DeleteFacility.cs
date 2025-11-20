@@ -33,7 +33,7 @@ namespace HotelManagement.Features.RoomManagement.Facilities
             var isFacilityExistsResult = await _mediator.Send(new IsEntityExistsQuery<Facility>(request.Id), cancellationToken);
             if (!isFacilityExistsResult.IsSuccess)
             {
-                return RequestResult<bool>.Failure("Facility not found.");
+                return RequestResult<bool>.Failure(isFacilityExistsResult.ErrorCode,isFacilityExistsResult.Message);
             }
             _repository.Delete(request.Id);
             await _repository.SaveChangesAsync();

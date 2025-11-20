@@ -24,7 +24,6 @@ builder.Services.AddMemoryCache();
 builder.Services.AddRoomManagementFeatures();
 builder.Services.AddReservationManagementFeatures();
 builder.Services.AddRateLimiter();
-
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 var app = builder.Build();
