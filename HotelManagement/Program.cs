@@ -1,4 +1,6 @@
 using FastEndpoints;
+using Hangfire;
+using Hangfire.PostgreSql;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.ReservationManagement;
 using HotelManagement.Features.RoomManagement;
@@ -9,6 +11,8 @@ using HotelManagement.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
+using Npgsql;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddFastEndpoints();
@@ -25,7 +29,11 @@ builder.Services.AddRoomManagementFeatures();
 builder.Services.AddReservationManagementFeatures();
 builder.Services.AddRateLimiter();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>()); 
+builder.Services.AddHangfire(config =>
+    config.UsePostgreSqlStorage(options =>
+    options.UseExistingNpgsqlConnection(new NpgsqlConnection(builder.Configuration.GetConnectionString("PostConnection"))))
+);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
