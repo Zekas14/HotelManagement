@@ -33,7 +33,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands
 
         public async Task<RequestResult<bool>> Handle(DeleteRoomCommand request, CancellationToken cancellationToken)
         {
-            var isRoomExistsResult = await mediator.Send(new IsEntityExistsQuery<Room>(request.RoomID),cancellationToken);
+            var isRoomExistsResult = await mediator.Send(new EntityExistsQuery<Room>(request.RoomID),cancellationToken);
             if (!isRoomExistsResult.IsSuccess)
             {
                 return RequestResult<bool>.Failure(ErrorCode.NotFound,isRoomExistsResult.Message);

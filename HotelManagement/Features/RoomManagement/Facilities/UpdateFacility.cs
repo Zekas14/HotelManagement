@@ -47,7 +47,7 @@ namespace HotelManagement.Features.RoomManagement.Facilities
 
         public async Task<RequestResult<bool>> Handle(UpdateFacilityCommand request, CancellationToken cancellationToken)
         {
-           var isFacilityExists=  await mediator.Send(new IsEntityExistsQuery<Facility>(request.Id), cancellationToken);
+           var isFacilityExists=  await mediator.Send(new EntityExistsQuery<Facility>(request.Id), cancellationToken);
             if (!isFacilityExists.IsSuccess)
             {
                 return RequestResult<bool>.Failure(isFacilityExists.ErrorCode,isFacilityExists.Message);

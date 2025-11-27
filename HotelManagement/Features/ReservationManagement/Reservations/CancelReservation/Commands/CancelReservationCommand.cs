@@ -45,6 +45,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.CancelRese
         }
     }
     #endregion
+
     #region Endpoint
     public class CancelReservationEndpoint(IMediator mediator , IValidator<CancelReservationCommand> validator) :DeleteEndpoint<CancelReservationCommand>(mediator, validator)
     {

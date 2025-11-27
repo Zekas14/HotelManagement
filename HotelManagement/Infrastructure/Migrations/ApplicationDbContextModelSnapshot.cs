@@ -51,7 +51,7 @@ namespace HotelManagement.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Facilities");
+                    b.ToTable("Facilities", (string)null);
                 });
 
             modelBuilder.Entity("HotelManagement.Domain.Models.Reservation", b =>
@@ -98,7 +98,7 @@ namespace HotelManagement.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservation", (string)null);
                 });
 
             modelBuilder.Entity("HotelManagement.Domain.Models.Room", b =>
@@ -141,7 +141,7 @@ namespace HotelManagement.Infrastructure.Migrations
                     b.HasIndex("RoomNumber")
                         .IsUnique();
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("HotelManagement.Domain.Models.RoomFacility", b =>
@@ -176,7 +176,7 @@ namespace HotelManagement.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("RoomFacilities");
+                    b.ToTable("RoomFacilities", (string)null);
                 });
 
             modelBuilder.Entity("HotelManagement.Domain.Models.User", b =>
@@ -221,7 +221,7 @@ namespace HotelManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
 
                     b.HasDiscriminator().HasValue("User");
 

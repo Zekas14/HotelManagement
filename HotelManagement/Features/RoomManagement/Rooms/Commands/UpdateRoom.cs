@@ -53,7 +53,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands
 
         public async Task<RequestResult<bool>> Handle(UpdateRoomCommand request, CancellationToken cancellationToken)
         {
-          var isRoomExistsResult = await mediator.Send(new IsEntityExistsQuery<Room>(request.RoomID),cancellationToken);
+          var isRoomExistsResult = await mediator.Send(new EntityExistsQuery<Room>(request.RoomID),cancellationToken);
             string[] values =
                 [nameof(Room.RoomNumber), nameof(Room.Type), nameof(Room.PricePerNight), nameof(Room.IsAvailable)];
 

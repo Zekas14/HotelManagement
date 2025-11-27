@@ -34,6 +34,8 @@ builder.Services.AddHangfire(config =>
     config.UsePostgreSqlStorage(options =>
     options.UseExistingNpgsqlConnection(new NpgsqlConnection(builder.Configuration.GetConnectionString("PostConnection"))))
 );
+builder.Services.AddHangfireServer();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -51,6 +53,7 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseRateLimiter();
 app.UseMiddleware<GlobalErrorHandlerMiddleware>();
+app.UseHangfireDashboard("/hangfire");
 app.UseFastEndpoints().UseRateLimiter(new RateLimiterOptions
 {
     OnRejected = async (context, ct) =>
