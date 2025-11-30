@@ -46,7 +46,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.EditReserv
 
         public async Task<RequestResult<bool>> Handle(EditReservationCommand request, CancellationToken cancellationToken)
         {
-            var reservationExists = await _mediator.Send(new EntityExistsQuery<Reservation>(request.ReservationId));
+            var reservationExists = await _mediator.Send(new EntityExistsQuery<Reservation>(request.ReservationId),cancellationToken);
             if (!reservationExists.IsSuccess)
             {
                 return RequestResult<bool>.Failure(reservationExists.ErrorCode,reservationExists.Message);

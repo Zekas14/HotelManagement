@@ -8,6 +8,7 @@ namespace HotelManagement.Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Reservation> builder)
         {
+            builder.UseTptMappingStrategy();
         }
     }
 }

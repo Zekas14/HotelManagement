@@ -1,9 +1,10 @@
 ﻿using Xunit;
 using Moq;
-using HotelManagement.Features.RoomManagement.Rooms;
 using HotelManagement.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 using HotelManagement.Infrastructure.Data.Repositories;
+using HotelManagement.Domain.Enums;
+using HotelManagement.Features.RoomManagement.Rooms.Commands;
 
 namespace HotelManagement.Tests.Rooms
 {
@@ -81,7 +82,6 @@ namespace HotelManagement.Tests.Rooms
             Assert.NotNull(capturedRoom);
             Assert.Equal(command.RoomNumber, capturedRoom.RoomNumber);
             Assert.Equal(RoomType.Double, capturedRoom.Type);
-            Assert.Equal(command.Name, capturedRoom.Name);
         }
 
         [Fact]

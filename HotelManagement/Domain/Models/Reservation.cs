@@ -10,7 +10,11 @@
         public Guest? Guest { get; set; }
         public int NumberOfGuests { get; set; }
         public decimal TotalPrice { get; set; }
+
        
     }
+    public class ExtenedReservation : Reservation 
+    {
 
+    }
 }

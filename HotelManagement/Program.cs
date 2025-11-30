@@ -10,7 +10,6 @@ using HotelManagement.Infrastructure.Data.Seeds;
 using HotelManagement.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.RateLimiting;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,8 +52,7 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseRateLimiter();
 app.UseMiddleware<GlobalErrorHandlerMiddleware>();
-app.UseHangfireDashboard("/hangfire");
-app.UseFastEndpoints().UseRateLimiter(new RateLimiterOptions
+app.UseFastEndpoints().UseHangfireDashboard("/hangfire").UseRateLimiter(new RateLimiterOptions
 {
     OnRejected = async (context, ct) =>
     {
