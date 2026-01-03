@@ -1,5 +1,5 @@
 ﻿using HotelManagement.Domain.Models;
-using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Events;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.MakeReservation.Events;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 

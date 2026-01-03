@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using HotelManagement.Features.ReservationManagement.Reservations.CancelReservation.Commands;
-using HotelManagement.Features.ReservationManagement.Reservations.EditReservation;
-using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Commands;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.CancelReservation.Commands;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.EditReservation;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.MakeReservation.Commands;
 
 namespace HotelManagement.Features.ReservationManagement
 {

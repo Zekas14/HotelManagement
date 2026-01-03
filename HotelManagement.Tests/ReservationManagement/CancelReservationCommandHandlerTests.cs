@@ -3,9 +3,9 @@ using MediatR;
 using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Domain.Models;
 using HotelManagement.Features.ReservationManagement.Reservations.CancelReservation.Commands;
-using HotelManagement.Features.ReservationManagement.Reservations.CancelReservation.Queries;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.CancelReservation.Queries;
 
 namespace HotelManagement.Tests.ReservationManagement
 {

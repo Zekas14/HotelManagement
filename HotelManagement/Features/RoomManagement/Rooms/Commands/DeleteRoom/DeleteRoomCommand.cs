@@ -3,14 +3,11 @@ using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Features.Common.Queries;
 using HotelManagement.Domain.Models;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
-using HotelManagement.Features.Common;
 
-namespace HotelManagement.Features.RoomManagement.Rooms.Commands
+namespace HotelManagement.Features.RoomManagement.Rooms.Commands.DeleteRoom
 {
     #region Command    
     public record DeleteRoomCommand( int RoomID): IRequest<RequestResult<bool>>;
@@ -44,20 +41,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands
             return RequestResult<bool>.Success(true,"Room Deleted Successfully");
         }
     }
-    #endregion
 
-    #region Endpoint 
-    public class DeleteRoomEndPoint(IMediator mediator , IValidator<DeleteRoomCommand> validator) : DeleteEndpoint<DeleteRoomCommand>(mediator, validator)
-    {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/delete/"+"{id:int}";
-        override public async Task HandleAsync([FromRoute] DeleteRoomCommand req, CancellationToken ct)
-        {
-            var result =  await mediator.Send(req, ct);
-            IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<bool>(result.Data, result.Message)
-                : FailureEndpointResult<bool>.BadRequest(result.Message);
-            await Send.ResultAsync(response);
-        }
-    }
     #endregion
+    
 }

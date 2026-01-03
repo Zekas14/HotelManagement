@@ -6,7 +6,6 @@ using HotelManagement.Features.ReservationManagement;
 using HotelManagement.Features.RoomManagement;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Repositories;
-using HotelManagement.Infrastructure.Data.Seeds;
 using HotelManagement.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +32,14 @@ builder.Services.AddHangfire(config =>
     config.UsePostgreSqlStorage(options =>
     options.UseExistingNpgsqlConnection(new NpgsqlConnection(builder.Configuration.GetConnectionString("PostConnection"))))
 );
+builder.Services.AddCors(setupactions=>
+{
+    setupactions.AddPolicy("AllowSpecificOrigins",
+        policy =>
+        {
+            policy.AllowAnyOrigin();
+        });   
+});
 builder.Services.AddHangfireServer();
 
 var app = builder.Build();
@@ -42,22 +49,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    DatabaseSeeder.Seed(context);
-}
-
+/* using (var scope = app.Services.CreateScope())
+// {
+//     var services = scope.ServiceProvider;
+//     var context = services.GetRequiredService<ApplicationDbContext>();
+//     DatabaseSeeder.Seed(context);
+// }
+*/
 app.UseHttpsRedirection();
 app.UseRateLimiter();
+app.UseCors("AllowSpecificOrigins");
 app.UseMiddleware<GlobalErrorHandlerMiddleware>();
 app.UseFastEndpoints().UseHangfireDashboard("/hangfire").UseRateLimiter(new RateLimiterOptions
 {
     OnRejected = async (context, ct) =>
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-        var response = new FailureEndpointResult<bool>(errorCode: ErrorCode.LimitReached, message: "Slow down ya man… too many requests!");
+        var response = new FailureEndpointResult<bool>(errorCode: ErrorCode.LimitReached, message: "Slow down ya manï¿½ too many requests!");
         await context.HttpContext.Response.WriteAsJsonAsync(response, ct);
     }
 } );

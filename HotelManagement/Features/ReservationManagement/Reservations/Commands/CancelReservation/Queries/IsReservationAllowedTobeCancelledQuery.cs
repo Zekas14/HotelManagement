@@ -4,10 +4,10 @@ using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
-namespace HotelManagement.Features.ReservationManagement.Reservations.CancelReservation.Queries
+namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.CancelReservation.Queries
 {
     public record IsReservationAllowedTobeCancelledQuery(int ReservationId) : IRequest<RequestResult<bool>>;
-    public class iIsReservationAllowedTobeCancelledQueryHandler(IGenericRepository<Reservation> repository)
+    public class IsReservationAllowedTobeCancelledQueryHandler(IGenericRepository<Reservation> repository)
      : IRequestHandler<IsReservationAllowedTobeCancelledQuery, RequestResult<bool>>{
 
         public async Task<RequestResult<bool>> Handle(IsReservationAllowedTobeCancelledQuery request, CancellationToken cancellationToken)

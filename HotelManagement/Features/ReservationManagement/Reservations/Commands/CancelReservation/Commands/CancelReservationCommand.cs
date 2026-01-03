@@ -2,14 +2,13 @@
 using HotelManagement.Domain.Models;
 using HotelManagement.Features.Common;
 using HotelManagement.Features.Common.Endpoints;
-using HotelManagement.Features.Common.Queries;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
-using HotelManagement.Features.ReservationManagement.Reservations.CancelReservation.Queries;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.CancelReservation.Queries;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
-namespace HotelManagement.Features.ReservationManagement.Reservations.CancelReservation.Commands
+namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.CancelReservation.Commands
 {
     #region CancelReservationCommand
     public record CancelReservationCommand(int ReservationId, string Notes) : IRequest<RequestResult<bool>>;

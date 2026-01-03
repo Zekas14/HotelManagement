@@ -2,7 +2,7 @@
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
-namespace HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Queries
+namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.MakeReservation.Queries
 {
     public record CheckRoomAvailabilityQuery(int RoomId , DateTime From , DateTime To):IRequest<bool>;
     public class CheckRoomAvailabilityHandler(IGenericRepository<Reservation> repository) : IRequestHandler<CheckRoomAvailabilityQuery, bool>

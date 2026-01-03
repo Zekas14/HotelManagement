@@ -2,12 +2,12 @@
 using HotelManagement.Domain.Models;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
-using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Events;
-using HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Queries;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.MakeReservation.Events;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.MakeReservation.Queries;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
-namespace HotelManagement.Features.ReservationManagement.Reservations.MakeReservation.Commands
+namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.MakeReservation.Commands
 {
     #region Command
     public record MakeReservationCommmand   (

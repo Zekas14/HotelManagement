@@ -4,7 +4,7 @@ using HotelManagement.Domain.Models;
 using Microsoft.Extensions.Caching.Memory;
 using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Domain.Enums;
-using HotelManagement.Features.RoomManagement.Rooms.Commands;
+using HotelManagement.Features.RoomManagement.Rooms.Commands.AddRoom;
 
 namespace HotelManagement.Tests.Rooms
 {

@@ -3,12 +3,12 @@ using HotelManagement.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using HotelManagement.Domain.Enums;
-using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.Common;
+using HotelManagement.Features.RoomManagement.Rooms.Queries.GetRooms;
 
-namespace HotelManagement.Features.RoomManagement.Rooms.Queries
+namespace HotelManagement.Features.RoomManagement.Rooms.Queries.GetAvailableRooms
 {
     #region Query
     public record GetAvailableRoomsQuery(
@@ -88,36 +88,6 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries
             return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success(resultList, "Available rooms retrieved successfully");
         }
     }
-    #endregion
 
-    #region Endpoint
-    public class GetAvailableRoomsEndpoint(IMediator mediator) : GetEndpoint<GetAvailableRoomsQuery>(mediator)
-    {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/available/";
-
-        public override async Task HandleAsync(CancellationToken ct)
-        {
-            int? capacity = Query<int?>("capacity", false);
-            string? type = Query<string?>("type",false);
-            decimal? minPrice = Query<decimal?>("minPrice", false);
-            decimal? maxPrice = Query<decimal?>("maxPrice", false);
-            var facilityIds = Query<List<int>>("facilityIds", false)?.ToArray();
-
-            var query = new GetAvailableRoomsQuery(
-                Capacity: capacity,
-                Type: type,
-                MinPrice: minPrice,
-                MaxPrice: maxPrice,
-                FacilityIds: facilityIds
-            );
-
-
-            var result = await mediator.Send(query, ct);
-            IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<IReadOnlyList<GetRoomResponseDto>>(result.Data, result.Message)
-                : FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>.BadRequest(result.Message);
-            await Send.ResultAsync(response);
-        }
-    }
     #endregion
 }

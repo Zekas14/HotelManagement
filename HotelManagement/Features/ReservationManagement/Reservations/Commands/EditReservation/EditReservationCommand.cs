@@ -8,7 +8,7 @@ using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
-namespace HotelManagement.Features.ReservationManagement.Reservations.EditReservation
+namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.EditReservation
 {
     public record EditReservationCommand(int ReservationId, DateTime? CheckIn,
         DateTime? CheckOut , int? RoomId, int? NumberOfGuests) :IRequest<RequestResult<bool>>;

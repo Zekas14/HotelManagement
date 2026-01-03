@@ -3,12 +3,11 @@ using HotelManagement.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using System.Reflection.Metadata;
-using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.Common;
 
-namespace HotelManagement.Features.RoomManagement.Rooms.Queries
+namespace HotelManagement.Features.RoomManagement.Rooms.Queries.GetRooms
 {
     #region Query
     public record GetRoomsQuery :IRequest<RequestResult<IReadOnlyList<GetRoomResponseDto>>>;
@@ -24,6 +23,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries
         public string Type { get; set; }
         public IEnumerable<string>? Facilities { get; set; }
         public bool IsAvailable { get; set; }
+        public decimal PricePerNight { get; set; }
     }
     #endregion
 
@@ -48,6 +48,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries
                     RoomNumber = e.RoomNumber,
                     Facilities = e.Facilities!.Select(rf => rf.Facility!.Name),
                     Type = e.Type.ToString(),
+                    PricePerNight = e.PricePerNight,
                     CreatedDate = e.CreatedAt.ToString(Constants.DateTimeFormat),
                 });
             if (!data.Any())
@@ -57,26 +58,6 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries
             cache.Set("rooms", data.ToList(), TimeSpan.FromMinutes(20));
             return RequestResult<IReadOnlyList<GetRoomResponseDto>>.Success([.. data], "Rooms retrieved successfully");
         }
-    }
-    #endregion
-
-    #region Endpoint 
-    public class GetRoomsEndPoint(IMediator mediator) : GetEndpoint<GetRoomsQuery>(mediator)
-    {
-
-        protected override string GetRoute() => "/apis/rooms";
-
-
-        public override async Task HandleAsync(CancellationToken ct)
-        {
-            var query = new GetRoomsQuery();
-            var result = await mediator.Send(query, ct);
-            IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<IReadOnlyList<GetRoomResponseDto>>(result.Data, result.Message)
-                : FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>.BadRequest(result.Message);
-            await Send.ResultAsync(response);
-        }
-
     }
     #endregion
 }
