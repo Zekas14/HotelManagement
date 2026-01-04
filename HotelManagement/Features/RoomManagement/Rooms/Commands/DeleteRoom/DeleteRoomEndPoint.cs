@@ -16,7 +16,6 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.DeleteRoom
             base.Configure();
             Description(b => b
                 .WithTags("Room Management")
-                .Accepts<DeleteRoomCommand>("application/json")
                 .Produces<SuccessEndpointResult<bool>>(statusCode: 200, contentType: "application/json")
                 .WithSummary("Delete a room")
                 .WithDescription("Deletes a room from the hotel management system by its ID."));

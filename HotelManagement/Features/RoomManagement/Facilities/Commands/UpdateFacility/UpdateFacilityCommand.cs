@@ -9,7 +9,7 @@ using HotelManagement.Features.Common.Responses;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.Common;
 
-namespace HotelManagement.Features.RoomManagement.Facilities
+namespace HotelManagement.Features.RoomManagement.Facilities.Commands.UpdateFacility
 {
     #region Command
     public record UpdateFacilityCommand(int Id, string Name) : IRequest<RequestResult<bool>>;
@@ -63,6 +63,17 @@ namespace HotelManagement.Features.RoomManagement.Facilities
     public class UpdateFacilityEndPoint(IMediator mediator, IValidator<UpdateFacilityCommand> validator) : PostEndpoint<UpdateFacilityCommand, bool>(validator, mediator)
     {
         protected override string GetRoute() => $"{Constants.BaseApiUrl}/facilities/update";
+        public override void Configure()
+        {
+            base.Configure();
+            Description(b => b
+            .WithTags("Facilities")
+            .WithSummary("Update Facility")
+            .WithDescription("Update an existing facility")
+            .Accepts<UpdateFacilityCommand>("application/json")
+            .Produces<SuccessEndpointResult<bool>>(StatusCodes.Status200OK, "application/json")
+            );
+        }
 
         public override async Task HandleAsync(UpdateFacilityCommand req, CancellationToken ct)
         {

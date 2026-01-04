@@ -15,7 +15,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries.GetAvailableRoom
             base.Configure();
             Description(b => b
                 .WithTags("Room Management")
-                .Produces<IReadOnlyList<GetRoomResponseDto>>(200, "application/json")
+                .Produces<SuccessEndpointResult<IReadOnlyList<GetRoomResponseDto>>>(200, "application/json")
                 .Produces<FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>>(400, "application/json")
                 .WithSummary("Get Available Rooms")
                 .WithDescription("Retrieves a list of available rooms based on optional filtering criteria such as capacity, type, price range, and facilities."));

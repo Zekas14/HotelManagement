@@ -1,26 +1,27 @@
-﻿using FluentValidation;
+using FluentValidation;
 using MediatR;
 using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.Common;
 
-namespace HotelManagement.Features.RoomManagement.Rooms.Commands.UpdateRoom
+namespace HotelManagement.Features.RoomManagement.RoomFacilities.Commands.AddRoomFacility
 {
-    #region Endpoint 
-    public class UpdateRoomEndPoint(IMediator mediator,IValidator<UpdateRoomCommand> validator ) : PutEndpoint<UpdateRoomCommand,bool>(mediator, validator)
+    #region Endpoint
+    public class AddRoomFacilityEndPoint(IValidator<AddRoomFacilityCommand> validator, IMediator mediator) : PostEndpoint<AddRoomFacilityCommand, bool>(validator, mediator)
     {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/update";
+        protected override string GetRoute() => $"{Constants.BaseApiUrl}/roomfacility/add";
         public override void Configure()
         {
             base.Configure();
             Description(b => b
-                .WithTags("Room Management")
-                .WithSummary("Update a room")
-                .Accepts<UpdateRoomCommand>("application/json")
-                .Produces<SuccessEndpointResult<bool>>(statusCode: 200, contentType: "application/json")
-                .WithDescription("Updates the details of an existing room in the hotel management system."));
+                .WithTags("Room Facilities")
+                .WithSummary("Add Facility to Room")
+                .Accepts<AddRoomFacilityCommand>("application/json")
+                .Produces<SuccessEndpointResult<bool>>(StatusCodes.Status200OK, "application/json")
+                .WithDescription("Adds a facility to a specific room."));
         }
-        override public async Task HandleAsync(UpdateRoomCommand req, CancellationToken ct)
+
+        public override async Task HandleAsync(AddRoomFacilityCommand req, CancellationToken ct)
         {
             var validationResult = await Validate(req);
             if (!validationResult.IsSuccess)
@@ -28,6 +29,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.UpdateRoom
                 await Send.ResultAsync(validationResult);
                 return;
             }
+
             var result = await mediator.Send(req, ct);
             IResult response = result.IsSuccess
                 ? new SuccessEndpointResult<bool>(result.Data, result.Message)
@@ -35,6 +37,5 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.UpdateRoom
             await Send.ResultAsync(response);
         }
     }
-
     #endregion
 }

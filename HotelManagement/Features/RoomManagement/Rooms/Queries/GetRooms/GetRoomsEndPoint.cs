@@ -14,7 +14,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries.GetRooms
             base.Configure();
             Description(b =>b
             .WithTags("Room Management")
-            .Produces<IReadOnlyList<GetRoomResponseDto>>(200, "application/json")
+            .Produces<SuccessEndpointResult<IReadOnlyList<GetRoomResponseDto>>>(200, "application/json")
             .Produces<FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>>(400, "application/json")
             .WithSummary("Get all rooms")
             .WithDescription("Retrieves a list of all rooms in the hotel management system.")

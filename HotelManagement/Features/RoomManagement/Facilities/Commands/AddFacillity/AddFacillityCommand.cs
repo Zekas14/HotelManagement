@@ -4,12 +4,9 @@ using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Infrastructure.Data;
 using MediatR;
 using System.Reflection.Metadata;
-using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses;
-using HotelManagement.Features.Common.Responses.EndpointResults;
-using HotelManagement.Features.Common;
 
-namespace HotelManagement.Features.RoomManagement.Facilities
+namespace HotelManagement.Features.RoomManagement.Facilities.Commands.AddFacillity
 {
     #region Command & Validator
     public record AddFacillityCommand(string Name): IRequest<RequestResult<bool>>;
@@ -48,30 +45,6 @@ namespace HotelManagement.Features.RoomManagement.Facilities
             repository.SaveChanges();
           return Task.FromResult( RequestResult<bool>.Success(true,"Facility Added Successfully"));
         }
-    }
-    #endregion
-
-    #region Endpoint 
-    public class AddFacillityEndpoint( IValidator<AddFacillityCommand> validator, IMediator mediator) : PostEndpoint<AddFacillityCommand,bool>(validator,mediator)
-    {
-        protected override string GetRoute()=> $"{Constants.BaseApiUrl}/facilities/add";
-
-        public override async Task HandleAsync(AddFacillityCommand req, CancellationToken ct)
-        {
-            var validationResult = await Validate(req);
-            if (!validationResult.IsSuccess)
-            {
-                await Send.ResultAsync(validationResult);
-                return;
-            }
-            var result = await mediator.Send(req, ct);
-            IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<bool>(result.Data, result.Message)
-                : FailureEndpointResult<bool>.BadRequest(result.Message);
-            await Send.ResultAsync(response);
-
-        }
-
     }
 
     #endregion

@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
-using HotelManagement.Features.RoomManagement.Facilities;
-using HotelManagement.Features.RoomManagement.RoomFacilities;
+using HotelManagement.Features.RoomManagement.Facilities.Commands.AddFacillity;
+using HotelManagement.Features.RoomManagement.Facilities.Commands.DeleteFacility;
+using HotelManagement.Features.RoomManagement.Facilities.Commands.UpdateFacility;
+using HotelManagement.Features.RoomManagement.RoomFacilities.Commands.AddRoomFacility;
 using HotelManagement.Features.RoomManagement.Rooms.Commands.AddRoom;
 using HotelManagement.Features.RoomManagement.Rooms.Commands.DeleteRoom;
 using HotelManagement.Features.RoomManagement.Rooms.Commands.UpdateRoom;
