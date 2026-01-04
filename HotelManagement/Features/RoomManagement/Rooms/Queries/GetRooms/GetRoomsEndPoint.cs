@@ -9,8 +9,17 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries.GetRooms
     {
 
         protected override string GetRoute() => "/apis/rooms";
-
-
+        public override void Configure()
+        {
+            base.Configure();
+            Description(b =>b
+            .WithTags("Room Management")
+            .Produces<IReadOnlyList<GetRoomResponseDto>>(200, "application/json")
+            .Produces<FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>>(400, "application/json")
+            .WithSummary("Get all rooms")
+            .WithDescription("Retrieves a list of all rooms in the hotel management system.")
+            );
+        }
         public override async Task HandleAsync(CancellationToken ct)
         {
             var query = new GetRoomsQuery();

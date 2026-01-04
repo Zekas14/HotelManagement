@@ -10,6 +10,14 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.UpdateRoom
     public class UpdateRoomEndPoint(IMediator mediator,IValidator<UpdateRoomCommand> validator ) : PutEndpoint<UpdateRoomCommand,bool>(mediator, validator)
     {
         protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/update";
+        public override void Configure()
+        {
+            base.Configure();
+            Description(b => b
+                .WithTags("Room Management")
+                .WithSummary("Update a room")
+                .WithDescription("Updates the details of an existing room in the hotel management system."));
+        }
         override public async Task HandleAsync(UpdateRoomCommand req, CancellationToken ct)
         {
             var validationResult = await Validate(req);

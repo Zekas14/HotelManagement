@@ -14,18 +14,8 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.AddRoom
     public record AddRoomCommand(int RoomNumber, string Name ,string ImageUrl,int Capacity, string Type, decimal PricePerNight, bool IsAvailable) : IRequest<RequestResult<bool>>;
     #endregion
 
-    #region DTO & Validator
+    #region Validator
 
-    public class AddRoomDto
-    {
-
-        public int RoomNumber { get; set; }
-
-        public string? ImageUrl { get; set; }
-        public string? Type { get; set; }
-        public decimal PricePerNight { get; set; }
-        public bool IsAvailable { get; set; }
-    }
     public class AddRoomCommandValidator : AbstractValidator<AddRoomCommand>
     {
         private readonly IGenericRepository<Room> repository;

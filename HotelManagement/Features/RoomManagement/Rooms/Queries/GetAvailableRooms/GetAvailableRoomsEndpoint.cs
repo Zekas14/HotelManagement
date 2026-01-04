@@ -10,7 +10,17 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries.GetAvailableRoom
     public class GetAvailableRoomsEndpoint(IMediator mediator) : GetEndpoint<GetAvailableRoomsQuery>(mediator)
     {
         protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/available/";
+        public override void Configure()
+        {
+            base.Configure();
+            Description(b => b
+                .WithTags("Room Management")
+                .Produces<IReadOnlyList<GetRoomResponseDto>>(200, "application/json")
+                .Produces<FailureEndpointResult<IReadOnlyList<GetRoomResponseDto>>>(400, "application/json")
+                .WithSummary("Get Available Rooms")
+                .WithDescription("Retrieves a list of available rooms based on optional filtering criteria such as capacity, type, price range, and facilities."));
 
+        }
         public override async Task HandleAsync(CancellationToken ct)
         {
             int? capacity = Query<int?>("capacity", false);

@@ -10,7 +10,18 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.AddRoom
     public class AddRoomEndpoint(IMediator mediator , IValidator<AddRoomCommand> validator) : PostEndpoint<AddRoomCommand, bool>(validator , mediator)
     {
         protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/add";
+        public override void Configure()
+        {
+            base.Configure();
+            Description(b => b
+                .WithTags("Room Management")
+                .Accepts<AddRoomCommand>("application/json")
+                .Produces<SuccessEndpointResult<bool>>(200,"application/json")
+                .WithSummary("Add a new room")
+                .WithDescription("Adds a new room to the hotel management system."));
 
+
+        }
         public override async Task HandleAsync(AddRoomCommand req, CancellationToken ct)
         {
             var validationResult = await Validate(req);

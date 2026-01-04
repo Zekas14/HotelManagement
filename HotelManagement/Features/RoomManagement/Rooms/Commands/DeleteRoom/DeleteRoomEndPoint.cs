@@ -11,6 +11,16 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.DeleteRoom
     public class DeleteRoomEndPoint(IMediator mediator , IValidator<DeleteRoomCommand> validator) : DeleteEndpoint<DeleteRoomCommand>(mediator, validator)
     {
         protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/delete/"+"{id:int}";
+        public override void Configure()
+        {
+            base.Configure();
+            Description(b => b
+                .WithTags("Room Management")
+                .Accepts<DeleteRoomCommand>("application/json")
+                .Produces<SuccessEndpointResult<bool>>(statusCode: 200, contentType: "application/json")
+                .WithSummary("Delete a room")
+                .WithDescription("Deletes a room from the hotel management system by its ID."));
+        }
         override public async Task HandleAsync([FromRoute] DeleteRoomCommand req, CancellationToken ct)
         {
             var result =  await mediator.Send(req, ct);
