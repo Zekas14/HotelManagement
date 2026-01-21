@@ -16,8 +16,6 @@ namespace HotelManagement.Features.RoomManagement
             services.AddScoped<IValidator<AddRoomCommand>, AddRoomCommandValidator>();
             services.AddScoped<IValidator<UpdateRoomCommand>, UpdateRoomCommandValidator>();
             services.AddScoped<IValidator<DeleteRoomCommand>, DeleteRoomCommandValidator>();
-
-           
             services.AddScoped<IValidator<AddFacillityCommand>, AddFacillityCommandValidator>();
             services.AddScoped<IValidator<UpdateFacilityCommand>, UpdateFacilityCommandValidator>();
             services.AddScoped<IValidator<DeleteFacilityCommand>, DeleteFacilityCommandValidator>();

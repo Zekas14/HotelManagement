@@ -6,6 +6,7 @@ using Xunit;
 using HotelManagement.Features.RoomManagement.Facilities;
 using HotelManagement.Domain.Models;
 using HotelManagement.Infrastructure.Data.Repositories;
+using HotelManagement.Features.RoomManagement.Facilities.Commands.AddFacillity;
 
 namespace HotelManagement.Tests.Facilities
 {
