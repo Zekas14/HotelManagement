@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using HotelManagement.Infrastructure.Data.Repositories;
+﻿using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Features.Common.Queries;
 using HotelManagement.Domain.Models;
 using MediatR;
@@ -11,17 +10,9 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.DeleteRoom
 {
     #region Command    
     public record DeleteRoomCommand( int RoomID): IRequest<RequestResult<bool>>;
-
-    public class DeleteRoomCommandValidator: AbstractValidator<DeleteRoomCommand>
-    {
-        public DeleteRoomCommandValidator()
-        {
-            RuleFor(x=>x.RoomID).NotEmpty();
-        }
-    }
     #endregion
 
-    #region Command Handler
+    #region  Handler
     public class DeleteRoomCommandHandler(IGenericRepository<Room> repository, IMediator mediator, IMemoryCache cache) : IRequestHandler<DeleteRoomCommand, RequestResult<bool>>
     {
         private readonly IGenericRepository<Room> repository = repository;

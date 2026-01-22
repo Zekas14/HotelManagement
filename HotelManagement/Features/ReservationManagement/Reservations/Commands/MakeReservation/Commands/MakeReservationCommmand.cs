@@ -10,7 +10,7 @@ using MediatR;
 namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.MakeReservation.Commands
 {
     #region Command
-    public record MakeReservationCommmand   (
+    public record MakeReservationCommand   (
         DateTime CheckInDate,
         DateTime CheckOutDate,
         int RoomId,
@@ -22,7 +22,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.M
 
     #region  Validator
 
-        public class MakeReservationValidator : AbstractValidator<MakeReservationCommmand>
+        public class MakeReservationValidator : AbstractValidator<MakeReservationCommand>
         {
             private readonly IGenericRepository<Room> repository;
             public MakeReservationValidator(IGenericRepository<Room> repository)
@@ -59,12 +59,12 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.M
 
     #region Handler
 
-    public class MakeReservationHandler(IGenericRepository<Reservation> repository, IMediator mediator) : IRequestHandler<MakeReservationCommmand, RequestResult<bool>>
+    public class MakeReservationHandler(IGenericRepository<Reservation> repository, IMediator mediator) : IRequestHandler<MakeReservationCommand, RequestResult<bool>>
     {
             private readonly IGenericRepository<Reservation> repository = repository;
             private readonly IMediator mediator = mediator;
 
-            public async Task<RequestResult<bool>> Handle(MakeReservationCommmand request, CancellationToken cancellationToken)
+            public async Task<RequestResult<bool>> Handle(MakeReservationCommand request, CancellationToken cancellationToken)
             {
             var isRoomAvailable = await mediator.Send(new CheckRoomAvailabilityQuery(request.RoomId, request.CheckInDate, request.CheckOutDate), cancellationToken);
             if (!isRoomAvailable)

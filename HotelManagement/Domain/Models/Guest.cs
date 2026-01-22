@@ -1,9 +1,7 @@
 ﻿namespace HotelManagement.Domain.Models
 {
-    public class Guest : BaseModel
+    public class Guest : User
     {
-        public int UserId { get; set; }
-        public User? User { get; set; }
-        public ICollection<Reservation>? Reservations { get; set; }
+              public ICollection<Reservation>? Reservations { get; set; }
     }
 }

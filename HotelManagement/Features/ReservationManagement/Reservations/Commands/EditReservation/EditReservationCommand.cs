@@ -1,10 +1,7 @@
 ﻿using FluentValidation;
 using HotelManagement.Domain.Models;
-using HotelManagement.Features.Common;
-using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Queries;
 using HotelManagement.Features.Common.Responses;
-using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
@@ -64,28 +61,4 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.E
         }
     }
 
-
-    #region Endpoint
-    public class EditReservationEndPoint(IMediator mediator, IValidator<EditReservationCommand> validator) : PutEndpoint<EditReservationCommand, bool>(mediator,validator)
-    {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/reservations/edit";
-
-        public override async Task HandleAsync(EditReservationCommand req, CancellationToken ct)
-        {
-            var validationResult = await Validate(req);
-            if (!validationResult.IsSuccess)
-            {
-                await Send.ResultAsync(validationResult);
-                return;
-            }
-
-            var result = await mediator.Send(req, ct);
-            IResult response = result.IsSuccess
-                ? new SuccessEndpointResult<bool>(result.Data, result.Message)
-                : FailureEndpointResult<bool>.BadRequest(result.Message);
-
-            await Send.ResultAsync(response);
-        }
-    }
-    #endregion
 }

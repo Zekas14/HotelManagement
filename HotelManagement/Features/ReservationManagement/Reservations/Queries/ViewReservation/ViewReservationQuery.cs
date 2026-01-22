@@ -32,7 +32,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Queries.Vi
             var reservation = await _repository.Get(r=>r.Id==request.ReservationId).Select(r=>
             new ViewReservationResponseDto
             {
-                Guest = r.Guest.User.Username,
+                Guest = r.Guest.Username,
                 RoomId = r.Room.RoomNumber,
                 CheckInDate = r.CheckInDate.ToString(Constants.DateFormat),
                 CheckOutDate = r.CheckOutDate.ToString(Constants.DateFormat),

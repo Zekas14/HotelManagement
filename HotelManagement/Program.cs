@@ -34,7 +34,7 @@ builder.Services.AddHangfire(config =>
 );
 builder.Services.AddCors(setupactions=>
 {
-    setupactions.AddPolicy("AllowSpecificOrigins",
+    setupactions.AddPolicy("AllowOrigins",
         policy =>
         {
             policy.AllowAnyOrigin();
@@ -58,7 +58,7 @@ if (app.Environment.IsDevelopment())
 */
 app.UseHttpsRedirection();
 app.UseRateLimiter();
-app.UseCors("AllowSpecificOrigins");
+app.UseCors("AllowOrigins");
 app.UseMiddleware<GlobalErrorHandlerMiddleware>();
 app.UseFastEndpoints().UseHangfireDashboard("/hangfire").UseRateLimiter(new RateLimiterOptions
 {

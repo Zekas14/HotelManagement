@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using HotelManagement.Infrastructure.Data;
+﻿using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Domain.Models;
 using MediatR;
@@ -12,36 +11,10 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.AddRoom
 
     #region Command 
     public record AddRoomCommand(int RoomNumber, string Name ,string ImageUrl,int Capacity, string Type, decimal PricePerNight, bool IsAvailable) : IRequest<RequestResult<bool>>;
+
     #endregion
 
-    #region Validator
-
-    public class AddRoomCommandValidator : AbstractValidator<AddRoomCommand>
-    {
-        private readonly IGenericRepository<Room> repository;
-        public AddRoomCommandValidator(IGenericRepository<Room> repository)
-        {
-            this.repository = repository;
-            RuleFor(x => x.RoomNumber).GreaterThan(0);
-            RuleFor(x => x.Type)
-                .NotEmpty()
-                .MaximumLength(20)
-                .Must(type => new List<string> { "Single", "Double", "Suite", "Deluxe" }.Contains(type))
-                .WithMessage("Type must be one of: Single, Double, Suite, Deluxe.");
-            RuleFor(x => x.PricePerNight).GreaterThan(0);
-            RuleFor(x=>x.ImageUrl).NotEmpty().MinimumLength(2);
-            RuleFor(x => x.RoomNumber)
-                .Must(BeUniqueRoomNumber)
-                .WithMessage("Room number must be unique.");
-        }
-        private bool BeUniqueRoomNumber(int roomNumber)
-        {
-            return !repository.GetAll().Any(r => r.RoomNumber == roomNumber);
-        }
-    }
-    #endregion
-
-    #region Command Handler
+    #region Handler
 
     public class AddRoomCommandHandler(IGenericRepository<Room> repository,IMemoryCache cache) : IRequestHandler<AddRoomCommand, RequestResult<bool>>
     {

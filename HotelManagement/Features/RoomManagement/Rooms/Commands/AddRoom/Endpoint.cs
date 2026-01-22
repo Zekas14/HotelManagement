@@ -4,23 +4,25 @@ using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.Common;
 
-namespace HotelManagement.Features.RoomManagement.Rooms.Commands.UpdateRoom
+namespace HotelManagement.Features.RoomManagement.Rooms.Commands.AddRoom
 {
-    #region Endpoint 
-    public class UpdateRoomEndPoint(IMediator mediator,IValidator<UpdateRoomCommand> validator ) : PutEndpoint<UpdateRoomCommand,bool>(mediator, validator)
+    #region   Endpoint 
+    public class AddRoomEndpoint(IMediator mediator , IValidator<AddRoomCommand> validator) : PostEndpoint<AddRoomCommand, bool>(validator , mediator)
     {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/update";
+        protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/add";
         public override void Configure()
         {
             base.Configure();
             Description(b => b
                 .WithTags("Room Management")
-                .WithSummary("Update a room")
-                .Accepts<UpdateRoomCommand>("application/json")
-                .Produces<SuccessEndpointResult<bool>>(statusCode: 200, contentType: "application/json")
-                .WithDescription("Updates the details of an existing room in the hotel management system."));
+                .Accepts<AddRoomCommand>("application/json")
+                .Produces<SuccessEndpointResult<bool>>(200,"application/json")
+                .WithSummary("Add a new room")
+                .WithDescription("Adds a new room to the hotel management system."));
+
+
         }
-        override public async Task HandleAsync(UpdateRoomCommand req, CancellationToken ct)
+        public override async Task HandleAsync(AddRoomCommand req, CancellationToken ct)
         {
             var validationResult = await Validate(req);
             if (!validationResult.IsSuccess)
@@ -34,7 +36,8 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Commands.UpdateRoom
                 : FailureEndpointResult<bool>.BadRequest(result.Message);
             await Send.ResultAsync(response);
         }
+    
     }
-
     #endregion
 }
+

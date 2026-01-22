@@ -1,5 +1,6 @@
 ﻿using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses.EndpointResults;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.EditReservation;
 using MediatR;
 
 namespace HotelManagement.Features.ReservationManagement.Reservations.Queries.ViewReservation
@@ -8,6 +9,15 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Queries.Vi
     public class ViewReservationEndPoint(IMediator mediator) : GetEndpoint<ViewReservationResponseDto>(mediator)
     {
         protected override string GetRoute()=> "apis/reservations/{ReservationId:int}";
+        public override void Configure()
+        {
+            base.Configure();
+            Description(b => b
+                .WithTags("Reservation Management")
+                .Produces< SuccessEndpointResult<ViewReservationResponseDto>>(200, "application/json")
+                .WithSummary("View  Reservation")
+                .WithDescription("A guest or stuff Can view  a reservation "));
+        }
         public override async Task HandleAsync(CancellationToken ct)
         {
             var reservationId = Route<int>("ReservationId");

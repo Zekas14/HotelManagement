@@ -9,7 +9,7 @@ namespace HotelManagement.Features.ReservationManagement
     {
         public static IServiceCollection AddReservationManagementFeatures(this IServiceCollection services)
         {
-            services.AddScoped<IValidator<MakeReservationCommmand>, MakeReservationValidator>();
+            services.AddScoped<IValidator<MakeReservationCommand>, MakeReservationValidator>();
             services.AddScoped<IValidator<CancelReservationCommand>, CancelReservationValidator>();
             services.AddScoped<IValidator<EditReservationCommand>, EditReservationCommandValidator>();
             return services;

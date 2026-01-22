@@ -1,10 +1,8 @@
 ﻿using FluentValidation;
 using HotelManagement.Domain.Models;
-using HotelManagement.Features.Common;
-using HotelManagement.Features.Common.Endpoints;
 using HotelManagement.Features.Common.Responses;
-using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.ReservationManagement.Reservations.Commands.CancelReservation.Queries;
+using HotelManagement.Features.ReservationManagement.Reservations.Commands.EditReservation;
 using HotelManagement.Infrastructure.Data.Repositories;
 using MediatR;
 
@@ -43,27 +41,7 @@ namespace HotelManagement.Features.ReservationManagement.Reservations.Commands.C
             return RequestResult<bool>.Success(true,"Reservation cancelled successfully");
         }
     }
-    #endregion
 
-    #region Endpoint
-    public class CancelReservationEndpoint(IMediator mediator , IValidator<CancelReservationCommand> validator) :DeleteEndpoint<CancelReservationCommand>(mediator, validator)
-    {
-        protected override string GetRoute() => $"{Constants.BaseApiUrl}/reservations/cancel";
-        public override async Task HandleAsync(CancelReservationCommand req, CancellationToken ct)
-        {
-            var validationResult = await Validate(req);
-            if (!validationResult.IsSuccess)
-            {
-                await Send.ResultAsync(validationResult);
-
-            }
-            var result = await mediator.Send(req, ct);
-            IResult response = result.IsSuccess ? new SuccessEndpointResult<bool>(result.Data, result.Message)
-                : FailureEndpointResult<bool>.BadRequest(result.Message);
-            await Send.ResultAsync(response);
-
-        }
-    }
     #endregion
 
 }

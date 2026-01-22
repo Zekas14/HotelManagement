@@ -8,7 +8,7 @@ using HotelManagement.Features.Common;
 namespace HotelManagement.Features.RoomManagement.Rooms.Commands.DeleteRoom
 {
     #region Endpoint 
-    public class DeleteRoomEndPoint(IMediator mediator , IValidator<DeleteRoomCommand> validator) : DeleteEndpoint<DeleteRoomCommand>(mediator, validator)
+    public class DeleteRoomEndpoint(IMediator mediator , IValidator<DeleteRoomCommand> validator) : DeleteEndpoint<DeleteRoomCommand>(mediator, validator)
     {
         protected override string GetRoute() => $"{Constants.BaseApiUrl}/rooms/delete/"+"{id:int}";
         public override void Configure()

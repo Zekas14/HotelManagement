@@ -13,7 +13,7 @@ namespace HotelManagement.Features.RoomManagement
     {
         public static IServiceCollection AddRoomManagementFeatures(this IServiceCollection services)
         {
-            services.AddScoped<IValidator<AddRoomCommand>, AddRoomCommandValidator>();
+            services.AddScoped<IValidator<AddRoomCommand>, AddRoomValidator>();
             services.AddScoped<IValidator<UpdateRoomCommand>, UpdateRoomCommandValidator>();
             services.AddScoped<IValidator<DeleteRoomCommand>, DeleteRoomCommandValidator>();
             services.AddScoped<IValidator<AddFacillityCommand>, AddFacillityCommandValidator>();
