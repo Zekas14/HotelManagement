@@ -22,7 +22,6 @@ namespace HotelManagement.Features.ReportingManagement.OccupancyAnalytics
             var totalRooms = await roomRepository.Get(r => true).CountAsync(cancellationToken);
 
             var reservationsInPeriod = await reservationRepository.Get(r => 
-                r.Status != Domain.Enums.ReservationStatus.Cancelled &&
                 r.CheckInDate < to && 
                 r.CheckOutDate > from)
                 .Select(r => r.RoomId)

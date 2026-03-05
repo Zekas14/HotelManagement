@@ -27,8 +27,8 @@ namespace HotelManagement.Features.ReportingManagement.BookingsReport
             var reservations = await query.ToListAsync(cancellationToken);
 
             var total = reservations.Count;
-            var cancelled = reservations.Count(r => r.Status == Domain.Enums.ReservationStatus.Cancelled);
-            var completed = reservations.Count(r => r.Status == Domain.Enums.ReservationStatus.Completed);
+            var cancelled = 0; // Hard deleted, can't track
+            var completed = reservations.Count(r => r.CheckOutDate < DateTime.UtcNow);
 
             return RequestResult<BookingsReportDto>.Success(new BookingsReportDto(total, cancelled, completed), "Bookings report generated.");
         }
