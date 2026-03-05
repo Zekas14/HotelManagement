@@ -48,5 +48,6 @@ namespace HotelManagement.Features.Common.Responses.EndpointResults
         LimitReached = 429,
         FacilityAlreadyAssignedToRoom = 430,
         RoomIsUnavailable = 431,
+        PaymentAlreadyProcessed = 432
     }
 }

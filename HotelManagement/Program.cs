@@ -4,6 +4,7 @@ using Hangfire.PostgreSql;
 using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.ReservationManagement;
 using HotelManagement.Features.RoomManagement;
+using HotelManagement.Features.PaymentManagement;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Infrastructure.Middlewares;
@@ -25,6 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddMemoryCache(); 
 builder.Services.AddRoomManagementFeatures();
 builder.Services.AddReservationManagementFeatures();
+builder.Services.AddPaymentManagementFeatures();
 builder.Services.AddRateLimiter();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>()); 
@@ -41,9 +43,7 @@ builder.Services.AddCors(setupactions=>
         });   
 });
 builder.Services.AddHangfireServer();
-
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -68,6 +68,7 @@ app.UseFastEndpoints().UseHangfireDashboard("/hangfire").UseRateLimiter(new Rate
         var response = new FailureEndpointResult<bool>(errorCode: ErrorCode.LimitReached, message: "Slow down ya man� too many requests!");
         await context.HttpContext.Response.WriteAsJsonAsync(response, ct);
     }
-} );
+} 
+);
 app.Run();
 
