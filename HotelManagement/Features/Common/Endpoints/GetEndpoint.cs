@@ -12,7 +12,6 @@ namespace HotelManagement.Features.Common.Endpoints
         {
             Get(GetRoute());
             Throttle(hitLimit: 5, durationSeconds: 60);
-            AllowAnonymous();
         }
     }
 }

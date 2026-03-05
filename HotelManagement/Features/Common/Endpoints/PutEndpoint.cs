@@ -9,7 +9,6 @@ namespace HotelManagement.Features.Common.Endpoints
         public override void Configure()
         {
             Put(GetRoute());
-            AllowAnonymous();
         }
 
         

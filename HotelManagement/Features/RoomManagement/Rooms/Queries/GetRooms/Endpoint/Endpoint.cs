@@ -12,6 +12,7 @@ namespace HotelManagement.Features.RoomManagement.Rooms.Queries.GetRooms
         public override void Configure()
         {
             base.Configure();
+            AllowAnonymous();
             Description(b =>b
             .WithTags("Room Management")
             .Produces<SuccessEndpointResult<IReadOnlyList<GetRoomResponseDto>>>(200, "application/json")

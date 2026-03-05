@@ -5,6 +5,7 @@ using HotelManagement.Features.Common.Responses.EndpointResults;
 using HotelManagement.Features.ReservationManagement;
 using HotelManagement.Features.RoomManagement;
 using HotelManagement.Features.PaymentManagement;
+using HotelManagement.Features.AuthManagement;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Repositories;
 using HotelManagement.Infrastructure.Middlewares;
@@ -27,9 +28,33 @@ builder.Services.AddMemoryCache();
 builder.Services.AddRoomManagementFeatures();
 builder.Services.AddReservationManagementFeatures();
 builder.Services.AddPaymentManagementFeatures();
+builder.Services.AddAuthManagementFeatures();
 builder.Services.AddRateLimiter();
 builder.Services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>()); 
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
+    var key = jwtSettings["Key"] ?? throw new ArgumentNullException("JWT Key is missing");
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key))
+    };
+});
+builder.Services.AddAuthorization();
+
 builder.Services.AddHangfire(config =>
     config.UsePostgreSqlStorage(options =>
     options.UseExistingNpgsqlConnection(new NpgsqlConnection(builder.Configuration.GetConnectionString("PostConnection"))))
@@ -57,6 +82,8 @@ if (app.Environment.IsDevelopment())
 // }
 */
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseRateLimiter();
 app.UseCors("AllowOrigins");
 app.UseMiddleware<GlobalErrorHandlerMiddleware>();
